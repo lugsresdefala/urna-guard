@@ -1,0 +1,42 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Urna Guard – Configurações</title><link rel="stylesheet" href="ui.css"></head>
+<body class="options">
+<header><img src="../icons/icon48.png" alt="" width="32" height="32"><h1>Urna Guard – Configurações</h1></header>
+<p class="disc"><b>Aviso:</b> estas são heurísticas, não provas. Podem produzir falsos positivos e falsos negativos. Não use os resultados para assediar, expor ou denunciar ninguém em massa. A extensão nunca oculta posts, nunca denuncia e nunca executa ações no X. Todos os dados ficam apenas em <code>chrome.storage.local</code> neste navegador (LGPD). Não há servidores nem telemetria.</p>
+<label class="switch"><input type="checkbox" id="enabled"><span>Ativado</span></label>
+
+<h2>Sensibilidade</h2>
+<div class="grid">
+<label>Desinformação – amarelo <input type="number" id="disinfoYellow" min="1" max="30" step="0.5"></label>
+<label>Desinformação – vermelho <input type="number" id="disinfoRed" min="1" max="30" step="0.5"></label>
+<label>Conta suspeita – combina p/ vermelho <input type="number" id="accountYellow" min="1" max="30"></label>
+<label>Conta suspeita – alta <input type="number" id="accountRed" min="1" max="30"></label>
+</div>
+<p class="small">Vermelho = desinformação ≥ "vermelho" e conta ≥ "combina", <i>ou</i> desinformação ≥ "amarelo" e conta ≥ "alta". Amarelo = desinformação ≥ "amarelo". Sem narrativa de desinformação, nada é sinalizado.</p>
+
+<h2>Listas</h2>
+<div class="grid">
+<label>Lista de confiança (nunca sinalizar) – um @handle por linha<textarea id="allowlist" rows="6"></textarea></label>
+<label>Lista de observação (soma +3 no score de conta) – um @handle por linha<textarea id="blocklist" rows="6"></textarea></label>
+</div>
+
+<h2>Palavras-chave (JSON)</h2>
+<p class="small">Lista de objetos <code>{"category": "fraude", "weight": 3, "label": "texto", "pattern": "regex"}</code>. O texto é comparado já normalizado: minúsculas, sem acentos, leetspeak desfeito, letras repetidas comprimidas. Categorias: <span id="cats"></span>.</p>
+<textarea id="keywords" rows="16" class="mono"></textarea>
+
+<p class="btns"><button id="save" class="primary">Salvar</button><button id="reset">Restaurar padrão</button><span id="status"></span></p>
+
+<h2>Feedback "não é desinformação"</h2>
+<p class="small">Cada feedback reduz em 20% o peso dos sinais envolvidos (mínimo de 30%) e põe o autor na lista de confiança.</p>
+<div id="feedback" class="small"></div>
+<p><button id="resetFeedback">Zerar feedback</button></p>
+
+<h2>Dados locais</h2>
+<div class="cards">
+  <div class="card y"><b id="yellow">0</b><span>atenção</span></div>
+  <div class="card r"><b id="red">0</b><span>alto risco</span></div>
+  <div class="card"><b id="total">0</b><span>salvos</span></div>
+</div>
+<div id="stats" class="stats"></div>
+<p class="btns"><button id="exportJson">Exportar JSON</button><button id="exportCsv">Exportar CSV</button><button id="clear" class="danger">Limpar dados</button></p>
+<p class="small">Fontes oficiais: <a href="https://www.justicaeleitoral.jus.br/fato-ou-boato/" target="_blank" rel="noopener">TSE – Fato ou Boato</a> · <a href="https://www.tse.jus.br/eleicoes/urna-eletronica/seguranca-da-urna" target="_blank" rel="noopener">TSE – Segurança da urna</a></p>
+<script src="scoring.js"></script><script src="export.js"></script><script src="options.js"></script></body></html>

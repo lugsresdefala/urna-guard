@@ -1,0 +1,19 @@
+.ug-badge-wrap{display:inline-flex;align-items:center;margin-left:6px;vertical-align:middle}
+.ug-badge{all:unset;box-sizing:border-box;display:inline-block;padding:1px 9px;border-radius:999px;font:600 12px/18px system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer;white-space:nowrap;box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+.ug-badge:focus-visible{outline:2px solid #1d9bf0;outline-offset:2px}
+.ug-badge.ug-yellow{background:#ffd54f;color:#3e2a00}
+.ug-badge.ug-red{background:#d32f2f;color:#fff}
+.ug-panel{margin:8px 0;padding:10px 12px;border-radius:12px;border:1px solid #e0c060;background:#fffbea;color:#1a1a1a;font:400 13px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:default}
+.ug-panel-red{border-color:#e57373;background:#fff3f3}
+.ug-panel[hidden]{display:none!important}
+.ug-head{margin-bottom:6px}.ug-scores{color:#555}
+.ug-chips{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 6px}
+.ug-chip{background:#eceff1;border-radius:999px;padding:0 8px;font-size:12px}
+.ug-sec{font-weight:600;margin-top:6px}
+.ug-panel ul{margin:2px 0 4px 18px;padding:0}
+.ug-links a{color:#1565c0;margin-right:12px;text-decoration:underline}
+.ug-actions{margin-top:8px;display:flex;gap:8px}
+.ug-actions button{all:unset;cursor:pointer;padding:3px 10px;border-radius:8px;border:1px solid #999;font-size:12px;background:#fff;color:#222}
+.ug-actions .ug-fb{border-color:#2e7d32;color:#2e7d32}
+.ug-disc{color:#666;font-style:italic;font-size:11px;margin:6px 0 0}
+@media (prefers-color-scheme: dark){.ug-panel{background:#2a2614;color:#eee;border-color:#8a7420}.ug-panel-red{background:#2e1616;border-color:#a33}.ug-scores,.ug-disc{color:#aaa}.ug-chip{background:#333;color:#eee}.ug-links a{color:#64b5f6}.ug-actions button{background:#222;color:#eee}}
