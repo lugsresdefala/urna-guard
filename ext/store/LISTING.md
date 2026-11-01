@@ -9,6 +9,9 @@ Sinaliza, sem ocultar, posts no X com sinais de desinformação sobre a urna ele
 ## Categoria sugerida
 Chrome: "Ferramentas sociais e de comunicação" (ou "Notícias e clima"). Edge: "Social". Firefox: "Social e comunicação".
 
+## E-mail de contato
+tiagoog@lugaresdefala.com
+
 ## Idioma
 Português (Brasil)
 
@@ -49,7 +52,7 @@ Exibir, no X/Twitter, alertas informativos locais sobre posts com sinais de desi
 ## Uso de dados (formulário "Privacy practices" da Chrome Web Store)
 • Não coleta nem transmite dados do usuário. Todo processamento é local.
 • Marcar: "Não vendo nem transfiro dados a terceiros", "Não uso dados para fins não relacionados ao propósito único" e "Não uso dados para crédito/empréstimos".
-• URL da política de privacidade: <URL-DO-SITE>/privacidade.html
+• URL da política de privacidade: https://lugsresdefala.github.io/urna-guard/privacidade.html
 
 ## Ativos
 • Ícone 128×128: icons/icon128.png
