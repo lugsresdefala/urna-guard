@@ -1,4 +1,4 @@
-# Listagem nas lojas: Urna Guard 2.0.0
+# Listagem nas lojas: Urna Guard 2.1.0
 
 ## Nome (até 45 caracteres)
 Urna Guard – alerta sobre urnas no X

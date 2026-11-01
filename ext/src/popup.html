@@ -1,15 +1,44 @@
 <!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Urna Guard</title><link rel="stylesheet" href="ui.css"></head>
 <body class="popup">
-<header><img src="../icons/icon48.png" alt="" width="28" height="28"><h1>Urna Guard</h1>
-<label class="switch"><input type="checkbox" id="enabled"><span>Ativado</span></label></header>
-<div class="cards">
-  <div class="card y"><b id="yellow">0</b><span>atenção</span></div>
-  <div class="card r"><b id="red">0</b><span>alto risco</span></div>
-  <div class="card"><b id="total">0</b><span>salvos</span></div>
+<main>
+<header class="pop-head"><img src="../icons/icon48.png" alt="" width="28" height="28"><h1>Urna Guard</h1></header>
+
+<div class="onoff">
+  <label class="toggle"><input type="checkbox" id="enabled" role="switch" aria-describedby="stateHint"><span class="track" aria-hidden="true"></span><span id="stateLabel" data-i18n="popOn">Ligado</span></label>
+  <p id="stateHint" class="hint" data-i18n="popOnHint">Os selos aparecem nos posts do X.</p>
 </div>
-<h2>Por categoria</h2>
-<div id="stats" class="stats"></div>
-<div class="btns"><button id="exportJson">Exportar JSON</button><button id="exportCsv">Exportar CSV</button><button id="clear" class="danger">Limpar</button></div>
-<p><a href="options.html" target="_blank" id="opts">Configurações, listas e palavras-chave →</a></p>
-<p class="disc">Heurísticas, não são prova. Podem gerar falsos positivos. Não use para assediar ninguém. A extensão nunca oculta nem denuncia posts. Dados só neste navegador (chrome.storage.local).</p>
-<script src="scoring.js"></script><script src="export.js"></script><script src="popup.js"></script></body></html>
+
+<section aria-labelledby="todayH">
+  <h2 id="todayH" data-i18n="popToday">Hoje</h2>
+  <div class="cards">
+    <div class="card y"><span class="dot y" aria-hidden="true"></span><b id="todayYellow">0</b><span data-i18n="badgeShortYellow">Atenção</span></div>
+    <div class="card r"><span class="dot r" aria-hidden="true"></span><b id="todayRed">0</b><span data-i18n="badgeShortRed">Alto risco</span></div>
+  </div>
+</section>
+
+<fieldset class="sens" id="sens">
+  <legend data-i18n="sens">Sensibilidade</legend>
+  <div class="seg">
+    <input type="radio" name="sens" id="sens-low" value="low"><label for="sens-low" data-i18n="sensLow">Baixa</label>
+    <input type="radio" name="sens" id="sens-medium" value="medium"><label for="sens-medium" data-i18n="sensMedium">Média</label>
+    <input type="radio" name="sens" id="sens-high" value="high"><label for="sens-high" data-i18n="sensHigh">Alta</label>
+  </div>
+  <p class="hint" id="sensHint" aria-live="polite"></p>
+</fieldset>
+
+<details id="data">
+  <summary data-i18n="popData">Dados salvos e exportação</summary>
+  <div class="cards small-cards">
+    <div class="card y"><b id="yellow">0</b><span data-i18n="badgeShortYellow">atenção</span></div>
+    <div class="card r"><b id="red">0</b><span data-i18n="badgeShortRed">alto risco</span></div>
+    <div class="card"><b id="total">0</b><span data-i18n="saved">salvos</span></div>
+  </div>
+  <h3 data-i18n="byCategory">Por categoria</h3>
+  <div id="stats" class="stats"></div>
+  <div class="btns"><button id="exportJson" data-i18n="exportJson">Exportar JSON</button><button id="exportCsv" data-i18n="exportCsv">Exportar CSV</button><button id="clear" class="danger" data-i18n="clear">Limpar</button></div>
+</details>
+
+<nav class="pop-links"><a href="welcome.html" target="_blank" data-i18n="howItWorks">Como funciona</a><a href="options.html" target="_blank" id="opts" data-i18n="moreOptions">Mais opções</a></nav>
+<p class="disc" data-i18n="popDisc">Heurísticas, não são prova. Nunca oculta nem denuncia posts. Dados só neste navegador (LGPD).</p>
+</main>
+<script src="i18n.js"></script><script src="scoring.js"></script><script src="export.js"></script><script src="popup.js"></script></body></html>

@@ -8,8 +8,21 @@
     accountYellow: 3, accountRed: 5,
     keywords: null,          // null = DEFAULT_KEYWORDS
     allowlist: [],           // handles nunca sinalizados
-    blocklist: []            // handles em observação (somam no score de conta)
+    blocklist: [],           // handles em observação (somam no score de conta)
+    sensitivity: 'medium'    // low | medium | high (atalho para os limiares acima)
   };
+
+  // Três níveis de sensibilidade (popup). "custom" = limiares editados à mão nas opções.
+  const SENSITIVITY = {
+    low: { disinfoYellow: 4, disinfoRed: 7, accountYellow: 4, accountRed: 6 },
+    medium: { disinfoYellow: 3, disinfoRed: 6, accountYellow: 3, accountRed: 5 },
+    high: { disinfoYellow: 2, disinfoRed: 5, accountYellow: 2, accountRed: 4 }
+  };
+  function sensitivityOf(s) {
+    s = s || {};
+    for (const [k, v] of Object.entries(SENSITIVITY)) if (Object.keys(v).every(f => Number(s[f]) === v[f])) return k;
+    return 'custom';
+  }
 
   const CATEGORIES = {
     fraude: 'Fraude eleitoral', codigo: 'Código-fonte / software', voto_impresso: 'Voto impresso / auditoria',
@@ -97,11 +110,26 @@
   const ZW = /[\u200B-\u200F\u202A-\u202E\u2060-\u2064\uFEFF\u00AD\u034F\u180E]/g;
   const LEET = { '4': 'a', '3': 'e', '1': 'i', '0': 'o', '5': 's', '7': 't', '@': 'a', '$': 's' };
 
+  // Cache LRU simples (Map preserva ordem de inserção).
+  function lru(max) {
+    const m = new Map();
+    return {
+      get(k) { const v = m.get(k); if (v !== undefined) { m.delete(k); m.set(k, v); } return v; },
+      set(k, v) { m.set(k, v); if (m.size > max) m.delete(m.keys().next().value); return v; },
+      clear() { m.clear(); }, get size() { return m.size; }
+    };
+  }
+  const canonCache = lru(4000), normCache = lru(2000), fuzzyCache = lru(4000);
+
   function stripAccents(s) { return s.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
   const squeeze = s => s.replace(/([a-z])\1+/g, '$1');
 
   // Normalização leve (exibição/chaves).
   function normalize(text) {
+    const k = String(text || ''); const c = normCache.get(k); if (c !== undefined) return c;
+    return normCache.set(k, normalizeRaw(k));
+  }
+  function normalizeRaw(text) {
     return stripAccents(String(text || '').normalize('NFKC').replace(ZW, '').toLowerCase())
       .replace(/https?:\/\/\S+/g, ' ')
       .replace(/[^\p{L}\p{N}#@\s-]/gu, ' ')
@@ -126,6 +154,10 @@
   const KEY_SET = new Set(KEY_SQ);
   function fuzzyToken(tok) {
     if (tok.length < 4 || KEY_SET.has(tok) || /[^a-z]/.test(tok)) return tok;
+    const c = fuzzyCache.get(tok); if (c !== undefined) return c;
+    return fuzzyCache.set(tok, fuzzyTokenRaw(tok));
+  }
+  function fuzzyTokenRaw(tok) {
     for (const k of KEY_SQ) {
       if (k.length < 5 && (tok.length !== k.length || tok[0] !== k[0])) continue;  // tokens curtos: mais estrito
       if (k.length >= 5 && tok.length < 5) continue;
@@ -135,22 +167,31 @@
   }
 
   // Normalização robusta a ofuscação: zero-width, leetspeak, separadores, letras repetidas, erros de 1 letra.
+  // Regexes pré-compiladas (evita recriá-las a cada chamada).
+  const RE = { url: /https?:\/\/\S+/g, leetTok: /(^|[^a-z0-9@$])([a-z0-9@$]+)/g, hasL: /[a-z]/, hasD: /[0-9@$]/, numSuf: /^\d+[a-z]{1,2}$/,
+    leetCh: /[4310 57@$]/g, sep: /(^|[\s#])((?:[a-z][.\-_*·•|\/]){2,}[a-z])(?=[\s.,!?;:]|$)/g, nonL: /[^a-z]/g,
+    spaced: /(^|\s)([a-z](?: [a-z]){3,})(?=\s|$)/g, junk: /[^a-z0-9#@\s-]/g, ws: /\s+/g };
   function canonical(text, opts) {
-    opts = opts || {};
+    const fuzzy = !(opts && opts.fuzzy === false);
+    const raw = String(text || ''); const ck = (fuzzy ? '1' : '0') + raw;
+    const c = canonCache.get(ck); if (c !== undefined) return c;
+    return canonCache.set(ck, canonicalRaw(raw, fuzzy));
+  }
+  function canonicalRaw(text, fuzzy) {
     let s = stripAccents(String(text || '').normalize('NFKC').replace(ZW, '').toLowerCase());
-    s = s.replace(/https?:\/\/\S+/g, ' ');
+    s = s.replace(RE.url, ' ');
     // leetspeak somente em tokens que contêm letras (preserva "2022", "@perfil")
-    s = s.replace(/(^|[^a-z0-9@$])([a-z0-9@$]+)/g, (m, pre, tok) => {
-      if (!/[a-z]/.test(tok) || !/[0-9@$]/.test(tok) || tok[0] === '@' || /^\d+[a-z]{1,2}$/.test(tok)) return m;
-      return pre + tok.replace(/[4310 57@$]/g, c => LEET[c] || c);
+    if (RE.hasD.test(s)) s = s.replace(RE.leetTok, (m, pre, tok) => {
+      if (!RE.hasL.test(tok) || !RE.hasD.test(tok) || tok[0] === '@' || RE.numSuf.test(tok)) return m;
+      return pre + tok.replace(RE.leetCh, c => LEET[c] || c);
     });
     // separadores dentro de palavras: f.r.a.u.d.e, u-r-n-a, f*r*a*u*d*e
-    s = s.replace(/(^|[\s#])((?:[a-z][.\-_*·•|\/]){2,}[a-z])(?=[\s.,!?;:]|$)/g, (m, p, w) => p + w.replace(/[^a-z]/g, ''));
+    s = s.replace(RE.sep, (m, p, w) => p + w.replace(RE.nonL, ''));
     // letras isoladas separadas por espaço: "u r n a"
-    s = s.replace(/(^|\s)([a-z](?: [a-z]){3,})(?=\s|$)/g, (m, p, w) => p + w.replace(/ /g, ''));
-    s = s.replace(/[^a-z0-9#@\s-]/g, ' ').replace(/\s+/g, ' ').trim();
+    s = s.replace(RE.spaced, (m, p, w) => p + w.replace(/ /g, ''));
+    s = s.replace(RE.junk, ' ').replace(RE.ws, ' ').trim();
     s = squeeze(s);
-    if (opts.fuzzy !== false) s = s.split(' ').map(fuzzyToken).join(' ');
+    if (fuzzy) s = s.split(' ').map(fuzzyToken).join(' ');
     return s;
   }
 
@@ -194,8 +235,14 @@
     return popcount((parseInt(a.slice(0, 8), 16) ^ parseInt(b.slice(0, 8), 16)) >>> 0) + popcount((parseInt(a.slice(8), 16) ^ parseInt(b.slice(8), 16)) >>> 0);
   }
 
-  const compileCache = new Map();
+  const compileCache = new Map(); const compileRef = new WeakMap();
   function compile(list) {
+    if (list && typeof list === 'object' && compileRef.has(list)) return compileRef.get(list);
+    const out = compileJson(list);
+    if (list && typeof list === 'object') compileRef.set(list, out);
+    return out;
+  }
+  function compileJson(list) {
     const ck = JSON.stringify(list);
     if (compileCache.has(ck)) return compileCache.get(ck);
     const out = (list || []).map(k => {
@@ -331,12 +378,19 @@
 
   // Rastreador de comportamento coordenado na sessão.
   function createSessionTracker(options) {
-    const o = Object.assign({ minLength: 30, threshold: 0.6, maxEntries: 2000, burstWindowMs: 10 * 60 * 1000 }, options || {});
-    const groups = []; const links = new Map(); const authorPosts = new Map();
-    function findGroup(key, sh, sim) {
-      for (const g of groups) {
-        if (g.key === key) return g;
-        if (hamming(g.sim, sim) <= 6 || jaccard(g.sh, sh) >= o.threshold) return g;
+    // maxCompare limita as comparações SimHash/Jaccard aos grupos mais recentes (custo O(1) por post, não O(n)).
+    const o = Object.assign({ minLength: 30, threshold: 0.6, maxEntries: 2000, maxCompare: 300, burstWindowMs: 10 * 60 * 1000 }, options || {});
+    const groups = []; const byKey = new Map(); const links = new Map(); const authorPosts = new Map();
+    let comparisons = 0;
+    function findGroup(key, sh, hi, lo) {
+      const exact = byKey.get(key); if (exact) return exact;
+      const stop = Math.max(0, groups.length - o.maxCompare);
+      for (let i = groups.length - 1; i >= stop; i--) {
+        const g = groups[i]; comparisons++;
+        if (popcount((g.hi ^ hi) >>> 0) + popcount((g.lo ^ lo) >>> 0) <= 6) return g;
+        // Jaccard só é possível se os tamanhos forem compatíveis
+        const a = g.sh.size, b = sh.size;
+        if (Math.min(a, b) / Math.max(a, b) >= o.threshold && jaccard(g.sh, sh) >= o.threshold) return g;
       }
       return null;
     }
@@ -349,8 +403,12 @@
         let group = null;
         if (key.length >= o.minLength) {
           const sh = shingles(key, 2), sim = simhash(key);
-          group = findGroup(key, sh, sim);
-          if (!group) { group = { key, sh, sim, authors: new Set() }; groups.push(group); if (groups.length > o.maxEntries) groups.shift(); }
+          const hi = parseInt(sim.slice(0, 8), 16), lo = parseInt(sim.slice(8), 16);
+          group = findGroup(key, sh, hi, lo);
+          if (!group) {
+            group = { key, sh, sim, hi, lo, authors: new Set() }; groups.push(group); byKey.set(key, group);
+            if (groups.length > o.maxEntries) { const old = groups.shift(); if (byKey.get(old.key) === old) byKey.delete(old.key); }
+          }
           group.authors.add(handle);
         }
         const linkKeys = [...new Set((post.links || []).map(normalizeLink).filter(Boolean))];
@@ -366,7 +424,8 @@
         const burst = (authorPosts.get(entry.handle) || []).filter(p => now - p.time <= o.burstWindowMs).length;
         return { dupAuthors: entry.group ? entry.group.authors.size : 1, linkAuthors, burst, fingerprint: entry.group ? entry.group.sim : null };
       },
-      size() { return groups.length; }
+      size() { return groups.length; },
+      stats() { return { groups: groups.length, comparisons }; }
     };
   }
 
@@ -378,7 +437,7 @@
   }
 
   function classify(dis, acc, s, flags) {
-    s = Object.assign({}, DEFAULT_SETTINGS, s || {});
+    s = s && s.disinfoYellow != null ? s : Object.assign({}, DEFAULT_SETTINGS, s || {});
     if (flags && flags.allowlisted) return 'none';
     if (dis.score >= s.disinfoRed && acc.score >= s.accountYellow) return 'red';
     if (dis.score >= s.disinfoYellow && acc.score >= s.accountRed) return 'red';
@@ -386,7 +445,18 @@
     return 'none';
   }
 
-  const api = { DEFAULT_SETTINGS, DEFAULT_KEYWORDS, CONTEXT_TERMS, CATEGORIES, BIO_TERMS, normalize, canonical, levenshtein,
+  // Até n motivos principais (maior peso primeiro), para a explicação em linguagem simples.
+  function topReasons(dis, acc, n) {
+    n = n || 3;
+    const by = (arr, kind) => arr.filter(x => x.weight > 0).sort((a, b) => b.weight - a.weight).map(x => Object.assign({ kind }, x));
+    const d = by(dis.signals, 'dis'), a = by(acc.signals, 'acc');
+    // garante ao menos um motivo de cada tipo quando ambos existem
+    const out = a.length && d.length ? [...d.slice(0, n - 1), a[0]] : [...d, ...a].slice(0, n);
+    for (const x of [...d, ...a]) { if (out.length >= n) break; if (!out.includes(x)) out.push(x); }
+    return out.slice(0, n);
+  }
+
+  const api = { DEFAULT_SETTINGS, SENSITIVITY, sensitivityOf, topReasons, DEFAULT_KEYWORDS, CONTEXT_TERMS, CATEGORIES, BIO_TERMS, normalize, canonical, levenshtein,
     copypastaKey, hashString: s => hex(hashString(s)), shingles, jaccard, simhash, hamming, normalizeLink, emojiCount,
     feedbackMultipliers, scoreDisinformation, scoreAccount, createSessionTracker, classify };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

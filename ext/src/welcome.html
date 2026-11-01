@@ -1,0 +1,41 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Urna Guard</title><link rel="stylesheet" href="ui.css"></head>
+<body class="welcome">
+<main class="ob">
+  <header class="ob-head"><img src="../icons/icon48.png" alt="" width="40" height="40"><h1 data-i18n="obTitle">Bem-vindo ao Urna Guard</h1></header>
+  <p class="ob-progress" id="progress" aria-live="polite"></p>
+  <ol class="ob-dots" aria-hidden="true"><li></li><li></li><li></li></ol>
+
+  <section class="ob-step" id="step1" aria-labelledby="h1">
+    <h2 id="h1" tabindex="-1" data-i18n="ob1t">Selos com cor de semáforo</h2>
+    <p data-i18n="ob1">…</p>
+    <ul class="ob-legend">
+      <li><span class="ug-demo y"><span class="d"></span><span data-i18n="badgeShortYellow">Atenção</span> <u data-i18n="why">por quê?</u></span><span data-i18n="ob1y">…</span></li>
+      <li><span class="ug-demo r"><span class="d"></span><span data-i18n="badgeShortRed">Alto risco</span> <u data-i18n="why">por quê?</u></span><span data-i18n="ob1r">…</span></li>
+    </ul>
+  </section>
+  <section class="ob-step" id="step2" aria-labelledby="h2" hidden>
+    <h2 id="h2" tabindex="-1" data-i18n="ob2t">Clique em “por quê?”</h2>
+    <p data-i18n="ob2">…</p>
+    <div class="ob-panel" aria-hidden="true"><b data-i18n="panelTitleYellow">…</b><br><span data-i18n="mainReasons">…</span>: “fraude nas urnas”, “apuração secreta”<br><span data-i18n="whatToDo">…</span></div>
+  </section>
+  <section class="ob-step" id="step3" aria-labelledby="h3" hidden>
+    <h2 id="h3" tabindex="-1" data-i18n="ob3t">Escolha a sensibilidade</h2>
+    <fieldset class="sens"><legend data-i18n="sens">Sensibilidade</legend>
+      <div class="seg">
+        <input type="radio" name="sens" id="o-low" value="low"><label for="o-low" data-i18n="sensLow">Baixa</label>
+        <input type="radio" name="sens" id="o-medium" value="medium" checked><label for="o-medium" data-i18n="sensMedium">Média</label>
+        <input type="radio" name="sens" id="o-high" value="high"><label for="o-high" data-i18n="sensHigh">Alta</label>
+      </div>
+      <p class="hint" id="sensHint" aria-live="polite"></p>
+    </fieldset>
+    <p data-i18n="ob3">…</p>
+    <p class="disc" data-i18n="obPrivacy">…</p>
+  </section>
+
+  <div class="ob-nav">
+    <button type="button" id="back" data-i18n="back">Voltar</button>
+    <button type="button" id="skip" class="link" data-i18n="skip">Pular</button>
+    <button type="button" id="next" class="primary" data-i18n="next">Próximo</button>
+  </div>
+</main>
+<script src="i18n.js"></script><script src="scoring.js"></script><script src="welcome.js"></script></body></html>

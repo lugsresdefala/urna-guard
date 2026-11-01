@@ -9,12 +9,18 @@ const MOCK = fs.readFileSync(path.join(__dirname, 'mock-x.html'), 'utf8');
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==', 'base64');
 fs.mkdirSync(SHOTS, { recursive: true });
 const results = []; let failed = 0;
+const AXE = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
+async function axe(pg, include) {
+  await pg.evaluate(AXE);
+  const r = await pg.evaluate(inc => axe.run(inc ? { include: inc } : document, { runOnly: ['wcag2a', 'wcag2aa', 'wcag21aa', 'best-practice'] }), include || null);
+  return r.violations.map(v => `${v.id}(${v.nodes.length})`);
+}
 function check(name, cond, info) { results.push(`${cond ? 'PASS' : 'FAIL'} ${name}${info ? ' — ' + info : ''}`); if (!cond) failed++; }
 
 (async () => {
   const ctx = await chromium.launchPersistentContext(fs.mkdtempSync(path.join(os.tmpdir(), 'ug-')), {
-    channel: 'chromium', headless: true, viewport: { width: 1100, height: 1500 },
-    args: [`--disable-extensions-except=${EXT}`, `--load-extension=${EXT}`]
+    channel: 'chromium', headless: true, viewport: { width: 1100, height: 1500 }, locale: process.env.UG_LANG === 'en' ? 'en-US' : 'pt-BR', env: Object.assign({}, process.env, { LANGUAGE: process.env.UG_LANG === 'en' ? 'en_US' : 'pt_BR', LANG: process.env.UG_LANG === 'en' ? 'en_US.UTF-8' : 'pt_BR.UTF-8' }),
+    args: [`--disable-extensions-except=${EXT}`, `--load-extension=${EXT}`, '--lang=pt-BR']
   });
   const external = [];
   await ctx.route('**/*', route => {
@@ -27,6 +33,29 @@ function check(name, cond, info) { results.push(`${cond ? 'PASS' : 'FAIL'} ${nam
   let [sw] = ctx.serviceWorkers(); if (!sw) sw = await ctx.waitForEvent('serviceworker');
   const extId = sw.url().split('/')[2];
   check('service worker da extensão carregado', !!extId, extId);
+
+  // onboarding na primeira instalação (3 passos)
+  let ob = ctx.pages().find(p => p.url().includes('/src/welcome.html'));
+  if (!ob) ob = await ctx.waitForEvent('page', { predicate: p => p.url().includes('/src/welcome.html'), timeout: 5000 }).catch(() => null);
+  check('onboarding abre na primeira instalação', !!ob);
+  if (ob) {
+    await ob.setViewportSize({ width: 900, height: 820 }); await ob.waitForLoadState(); await ob.waitForTimeout(300);
+    check('onboarding: passo 1 de 3', /1 de 3/.test(await ob.textContent('#progress')), await ob.textContent('#progress'));
+    check('onboarding: axe sem violações (passo 1)', (await axe(ob)).length === 0, (await axe(ob)).join(', '));
+    await ob.screenshot({ path: path.join(SHOTS, 'onboarding-1.png') });
+    await ob.focus('#next'); await ob.keyboard.press('Enter');
+    check('onboarding: teclado avança e move o foco para o título', await ob.evaluate(() => document.activeElement.id === 'h2' && !document.getElementById('step2').hidden));
+    await ob.screenshot({ path: path.join(SHOTS, 'onboarding-2.png') });
+    await ob.click('#next');
+    await ob.click('label[for=o-high]');
+    check('onboarding: axe sem violações (passo 3)', (await axe(ob)).length === 0, (await axe(ob)).join(', '));
+    await ob.screenshot({ path: path.join(SHOTS, 'onboarding-3.png') });
+    await ob.click('label[for=o-medium]');
+    await ob.click('#next'); await ob.waitForTimeout(500);
+    const st = await sw.evaluate(() => new Promise(r => chrome.storage.local.get(['onboarded', 'settings'], r)));
+    check('onboarding: conclui, grava sensibilidade e abre o X', st.onboarded === true && st.settings.sensitivity === 'medium' && /x\.com/.test(ob.url()), ob.url());
+    await ob.close();
+  }
 
   const page = await ctx.newPage();
   const errors = [];
@@ -61,6 +90,14 @@ function check(name, cond, info) { results.push(`${cond ? 'PASS' : 'FAIL'} ${nam
   check('clique no selo abre o painel de detalhes', panelVisible);
   check('clique no selo não propaga para o tweet', (await page.evaluate(() => window.navigations)) === 0);
   const links = await page.$$eval('#t-red .ug-panel a', as => as.map(a => a.href));
+  check('selo: rótulo simples + "por quê?" + aria-expanded', /Alto risco/.test(await badge('t-red')) && /por quê\?/.test(await badge('t-red')) &&
+    (await page.$eval('#t-red .ug-badge', b => b.getAttribute('aria-expanded'))) === 'true');
+  check('painel explica em linguagem simples (motivos principais)', await page.$eval('#t-red .ug-panel', p => p.querySelectorAll('.ug-reasons li').length >= 1 && /Principais motivos/.test(p.textContent)));
+  check('selo e painel: axe sem violações', (await axe(page, ['#t-red .ug-badge-wrap', '#t-red .ug-panel'])).length === 0, (await axe(page, ['#t-red .ug-badge-wrap', '#t-red .ug-panel'])).join(', '));
+  await page.focus('#t-red .ug-close'); await page.keyboard.press('Escape');
+  check('Esc fecha o painel e devolve o foco ao selo', await page.evaluate(() => document.querySelector('#t-red .ug-panel').hidden && document.activeElement === document.querySelector('#t-red .ug-badge')));
+  await page.focus('#t-red .ug-badge'); await page.keyboard.press('Enter');
+  check('teclado (Enter) abre o painel', await page.$eval('#t-red .ug-panel', p => !p.hidden));
   check('links oficiais do TSE no painel', links.includes('https://www.justicaeleitoral.jus.br/fato-ou-boato/') && links.some(l => l.includes('tse.jus.br')));
   await page.click('#t-copy-1 .ug-badge');
   await page.locator('#t-red').screenshot({ path: path.join(SHOTS, 'painel-alto-risco.png') });
@@ -104,6 +141,19 @@ function check(name, cond, info) { results.push(`${cond ? 'PASS' : 'FAIL'} ${nam
   await pop.setViewportSize({ width: 380, height: 600 });
   await pop.goto(`chrome-extension://${extId}/src/popup.html`);
   await pop.waitForTimeout(500);
+  check('popup: contadores de hoje', (await pop.textContent('#todayRed')) !== '0', `hoje: vermelho=${await pop.textContent('#todayRed')} amarelo=${await pop.textContent('#todayYellow')}`);
+  check('popup: sensibilidade média marcada', await pop.isChecked('#sens-medium'));
+  check('popup: axe sem violações', (await axe(pop)).length === 0, (await axe(pop)).join(', '));
+  await pop.screenshot({ path: path.join(SHOTS, 'popup.png') });
+  await pop.click('label[for=sens-high]'); await pop.waitForTimeout(300);
+  const sh = await sw.evaluate(() => new Promise(r => chrome.storage.local.get('settings', x => r(x.settings))));
+  check('popup: sensibilidade alta aplica limiares', sh.sensitivity === 'high' && sh.disinfoYellow === 2, JSON.stringify({ s: sh.sensitivity, y: sh.disinfoYellow }));
+  await pop.click('label[for=sens-medium]'); await pop.waitForTimeout(300);
+  await pop.click('.toggle'); await pop.waitForTimeout(500);
+  check('popup: interruptor desliga (e remove selos)', !(await pop.isChecked('#enabled')) && /Desligado/.test(await pop.textContent('#stateLabel')) && (await page.$$('.ug-badge')).length === 0);
+  await pop.click('.toggle'); await pop.waitForTimeout(500);
+  check('popup: interruptor religa', (await pop.isChecked('#enabled')) && (await page.$$('.ug-badge')).length >= 7);
+  await pop.click('#data summary');
   check('popup: contadores', (await pop.textContent('#red')) !== '0', `vermelho=${await pop.textContent('#red')} amarelo=${await pop.textContent('#yellow')}`);
   check('popup: estatísticas por categoria', (await pop.$$('#stats .stat')).length >= 5);
   const [dl] = await Promise.all([pop.waitForEvent('download', { timeout: 5000 }).catch(() => null), pop.click('#exportCsv')]);
@@ -112,7 +162,7 @@ function check(name, cond, info) { results.push(`${cond ? 'PASS' : 'FAIL'} ${nam
   const [dj] = await Promise.all([pop.waitForEvent('download', { timeout: 5000 }).catch(() => null), pop.click('#exportJson')]);
   if (dj) { const p = path.join(SHOTS, 'export.json'); await dj.saveAs(p); const j = JSON.parse(fs.readFileSync(p, 'utf8')); check('exportação JSON', Array.isArray(j.items) && j.items.length >= 8, `${j.items.length} itens`); }
   else check('exportação JSON', false, 'download não ocorreu');
-  await pop.screenshot({ path: path.join(SHOTS, 'popup.png'), fullPage: true });
+  await pop.screenshot({ path: path.join(SHOTS, 'popup-dados.png'), fullPage: true });
   check('popup sem erros no console', popErr.length === 0, popErr.join(' | '));
 
   // opções

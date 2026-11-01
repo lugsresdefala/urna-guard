@@ -188,3 +188,37 @@ test('regressão: autores sem handle não se agrupam com handle vazio de outros'
   const t = S.createSessionTracker(); const txt = 'texto repetido sobre as urnas vieram com votos acordem brasileiros';
   t.add({ text: txt, handle: 'a' }); assert.equal(t.state(t.add({ text: txt, handle: 'a' })).dupAuthors, 1);
 });
+
+// ---- 2.1.0 ----
+test('sensibilidade: 3 níveis e detecção de personalizado', () => {
+  assert.deepEqual(Object.keys(S.SENSITIVITY), ['low', 'medium', 'high']);
+  assert.equal(S.sensitivityOf(S.DEFAULT_SETTINGS), 'medium');
+  assert.equal(S.sensitivityOf(Object.assign({}, S.DEFAULT_SETTINGS, S.SENSITIVITY.high)), 'high');
+  assert.equal(S.sensitivityOf(Object.assign({}, S.DEFAULT_SETTINGS, { disinfoYellow: 2.5 })), 'custom');
+  const d = { score: 2, signals: [], categories: [] }, a = { score: 0, signals: [] };
+  assert.equal(S.classify(d, a, S.SENSITIVITY.medium), 'none');
+  assert.equal(S.classify(d, a, S.SENSITIVITY.high), 'yellow');
+});
+test('canonical com cache devolve o mesmo resultado (e respeita fuzzy:false)', () => {
+  const t = 'A fr4ud3 n4s urn4s é real';
+  assert.equal(S.canonical(t), S.canonical(t));
+  assert.equal(S.canonical('eleicaa smartmatik', { fuzzy: false }), 'eleica smartmatik');
+  assert.equal(S.canonical('eleicaa smartmatik'), 'eleicao smartmatic');
+  assert.equal(S.canonical('eleicaa smartmatik', { fuzzy: false }), 'eleica smartmatik');
+});
+test('rastreador limita comparações por post (maxCompare)', () => {
+  const tr = S.createSessionTracker({ maxCompare: 50 });
+  for (let i = 0; i < 400; i++) tr.add({ text: `texto unico numero ${i} sobre assunto variado ${i * 7} com palavras ${i % 13} extra ${i * 3}`, handle: 'u' + i });
+  const st = tr.stats();
+  assert.equal(st.groups, 400);
+  assert.ok(st.comparisons <= 400 * 50, st.comparisons);
+  // cópia exata continua sendo agrupada mesmo fora da janela de comparação (índice por chave)
+  const e = tr.add({ text: 'texto unico numero 0 sobre assunto variado 0 com palavras 0 extra 0', handle: 'outro' });
+  assert.equal(tr.state(e).dupAuthors, 2);
+});
+test('topReasons ordena por peso e ignora contexto negativo', () => {
+  const d = S.scoreDisinformation('fraude nas urnas! smartmatic');
+  const a = S.scoreAccount({ handle: 'patriota8473625', defaultAvatar: true }, {});
+  const r = S.topReasons(d, a, 3);
+  assert.equal(r.length, 3); assert.equal(r[0].label, 'fraude nas urnas'); assert.ok(r.every(x => x.weight > 0));
+});

@@ -1,19 +1,28 @@
+/* Urna Guard – selo e painel. Cores com contraste WCAG AA (≥ 4.5:1). */
 .ug-badge-wrap{display:inline-flex;align-items:center;margin-left:6px;vertical-align:middle}
-.ug-badge{all:unset;box-sizing:border-box;display:inline-block;padding:1px 9px;border-radius:999px;font:600 12px/18px system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer;white-space:nowrap;box-shadow:0 0 0 1px rgba(0,0,0,.08)}
-.ug-badge:focus-visible{outline:2px solid #1d9bf0;outline-offset:2px}
-.ug-badge.ug-yellow{background:#ffd54f;color:#3e2a00}
-.ug-badge.ug-red{background:#d32f2f;color:#fff}
-.ug-panel{margin:8px 0;padding:10px 12px;border-radius:12px;border:1px solid #e0c060;background:#fffbea;color:#1a1a1a;font:400 13px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:default}
-.ug-panel-red{border-color:#e57373;background:#fff3f3}
+.ug-badge{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;gap:6px;padding:2px 10px 2px 8px;border-radius:999px;font:600 12.5px/20px system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer;white-space:nowrap;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
+.ug-badge:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px}
+.ug-badge:hover{filter:brightness(.96)}
+.ug-dot{width:10px;height:10px;border-radius:50%;flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.85)}
+.ug-why{font-weight:500;text-decoration:underline;text-underline-offset:2px;opacity:.95}
+.ug-badge.ug-yellow{background:#ffe08a;color:#3a2900}.ug-yellow .ug-dot{background:#b26a00}
+.ug-badge.ug-red{background:#b3261e;color:#fff}.ug-red .ug-dot{background:#fff;box-shadow:0 0 0 2px #7f1d1d}
+.ug-panel{margin:8px 0;padding:12px 14px;border-radius:12px;border:1px solid #d9b44a;border-left-width:6px;background:#fffbea;color:#1a1a1a;font:400 14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:default}
+.ug-panel:focus{outline:none}.ug-panel:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px}
+.ug-panel-red{border-color:#c62828;background:#fff3f3}
 .ug-panel[hidden]{display:none!important}
-.ug-head{margin-bottom:6px}.ug-scores{color:#555}
-.ug-chips{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 6px}
-.ug-chip{background:#eceff1;border-radius:999px;padding:0 8px;font-size:12px}
+.ug-title{font-weight:700;margin:0 0 6px}
+.ug-chips{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}
+.ug-chip{background:#e8ecef;color:#1a1a1a;border-radius:999px;padding:0 8px;font-size:12px}
 .ug-sec{font-weight:600;margin-top:6px}
 .ug-panel ul{margin:2px 0 4px 18px;padding:0}
-.ug-links a{color:#1565c0;margin-right:12px;text-decoration:underline}
-.ug-actions{margin-top:8px;display:flex;gap:8px}
-.ug-actions button{all:unset;cursor:pointer;padding:3px 10px;border-radius:8px;border:1px solid #999;font-size:12px;background:#fff;color:#222}
-.ug-actions .ug-fb{border-color:#2e7d32;color:#2e7d32}
-.ug-disc{color:#666;font-style:italic;font-size:11px;margin:6px 0 0}
-@media (prefers-color-scheme: dark){.ug-panel{background:#2a2614;color:#eee;border-color:#8a7420}.ug-panel-red{background:#2e1616;border-color:#a33}.ug-scores,.ug-disc{color:#aaa}.ug-chip{background:#333;color:#eee}.ug-links a{color:#64b5f6}.ug-actions button{background:#222;color:#eee}}
+.ug-todo{margin:6px 0 4px}
+.ug-links a{color:#0b4f9c;margin-right:12px;text-decoration:underline}
+.ug-details{margin-top:8px;font-size:13px}.ug-details summary{cursor:pointer;color:#333}
+.ug-details summary:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px}
+.ug-actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.ug-actions button{all:unset;cursor:pointer;padding:5px 12px;border-radius:8px;border:1px solid #6b6b6b;font-size:13px;background:#fff;color:#1a1a1a}
+.ug-actions button:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px}
+.ug-actions .ug-fb{border-color:#1b5e20;color:#1b5e20}
+.ug-disc{color:#4a4a4a;font-style:italic;font-size:12px;margin:8px 0 0}
+@media (prefers-color-scheme: dark){.ug-panel{background:#2a2614;color:#f0f0f0;border-color:#c9a227}.ug-panel-red{background:#2e1616;border-color:#ef5350}.ug-disc,.ug-details summary{color:#c8c8c8}.ug-chip{background:#3a3a3a;color:#f0f0f0}.ug-links a{color:#8ab4f8}.ug-actions button{background:#222;color:#f0f0f0;border-color:#9a9a9a}.ug-actions .ug-fb{color:#81c784;border-color:#81c784}}

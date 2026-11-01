@@ -1,6 +1,198 @@
 {
-  "extName": { "message": "Urna Guard – voting-machine alerts on X", "description": "Extension name (max 45 chars)" },
-  "extShortName": { "message": "Urna Guard" },
-  "extDescription": { "message": "Flags (never hides) posts on X with signs of disinformation about Brazil's electronic voting machine and suspicious accounts. 100% local." },
-  "actionTitle": { "message": "Urna Guard" }
+ "extName": {
+  "message": "Urna Guard – voting-machine alerts on X",
+  "description": "Extension name (max 45 chars)"
+ },
+ "extShortName": {
+  "message": "Urna Guard"
+ },
+ "extDescription": {
+  "message": "Flags (never hides) posts on X with signs of disinformation about Brazil's electronic voting machine and suspicious accounts. 100% local."
+ },
+ "actionTitle": {
+  "message": "Urna Guard"
+ },
+ "badgeYellow": {
+  "message": "Caution: may be misinformation"
+ },
+ "badgeRed": {
+  "message": "High risk: misinformation + suspicious account"
+ },
+ "badgeShortYellow": {
+  "message": "Caution"
+ },
+ "badgeShortRed": {
+  "message": "High risk"
+ },
+ "why": {
+  "message": "why?"
+ },
+ "badgeAria": {
+  "message": "Urna Guard: see why this post was flagged"
+ },
+ "panelTitleYellow": {
+  "message": "Caution: this post repeats common misinformation claims about voting machines."
+ },
+ "panelTitleRed": {
+  "message": "High risk: misinformation claims from an account showing signs of automation or coordination."
+ },
+ "mainReasons": {
+  "message": "Main reasons"
+ },
+ "reasonDis": {
+  "message": "the text mentions"
+ },
+ "reasonAcc": {
+  "message": "the account has"
+ },
+ "whatToDo": {
+  "message": "What to do: check an official source before sharing."
+ },
+ "details": {
+  "message": "Technical details"
+ },
+ "secDis": {
+  "message": "Misinformation signals"
+ },
+ "secAcc": {
+  "message": "Suspicious-account signals"
+ },
+ "noSignal": {
+  "message": "no signals"
+ },
+ "scoreDis": {
+  "message": "misinformation"
+ },
+ "scoreAcc": {
+  "message": "account"
+ },
+ "notDisinfo": {
+  "message": "Not misinformation"
+ },
+ "notDisinfoTitle": {
+  "message": "Saves your feedback in this browser only, lowers these signals' weight and adds the author to your trusted list"
+ },
+ "close": {
+  "message": "Close"
+ },
+ "disclaimer": {
+  "message": "Automatic heuristic, not proof. False positives can happen. Do not use it to harass anyone. Nothing was hidden or reported."
+ },
+ "popOn": {
+  "message": "On"
+ },
+ "popOff": {
+  "message": "Off"
+ },
+ "popOnHint": {
+  "message": "Badges show up on X posts."
+ },
+ "popOffHint": {
+  "message": "Paused: no posts are analyzed."
+ },
+ "popToday": {
+  "message": "Today"
+ },
+ "popTotal": {
+  "message": "in total"
+ },
+ "sens": {
+  "message": "Sensitivity"
+ },
+ "sensLow": {
+  "message": "Low"
+ },
+ "sensMedium": {
+  "message": "Medium"
+ },
+ "sensHigh": {
+  "message": "High"
+ },
+ "sensLowHint": {
+  "message": "Only clear-cut cases. Fewer alerts."
+ },
+ "sensMediumHint": {
+  "message": "Recommended balance."
+ },
+ "sensHighHint": {
+  "message": "More alerts, more false positives."
+ },
+ "sensCustom": {
+  "message": "Customized in options. Pick a level to go back to a preset."
+ },
+ "popData": {
+  "message": "Saved data and export"
+ },
+ "byCategory": {
+  "message": "By category"
+ },
+ "saved": {
+  "message": "saved"
+ },
+ "exportJson": {
+  "message": "Export JSON"
+ },
+ "exportCsv": {
+  "message": "Export CSV"
+ },
+ "clear": {
+  "message": "Clear"
+ },
+ "howItWorks": {
+  "message": "How it works"
+ },
+ "moreOptions": {
+  "message": "More options"
+ },
+ "popDisc": {
+  "message": "Heuristics, not proof. Never hides or reports posts. Data stays in this browser only (LGPD)."
+ },
+ "obTitle": {
+  "message": "Welcome to Urna Guard"
+ },
+ "obStep": {
+  "message": "Step"
+ },
+ "obOf": {
+  "message": "of"
+ },
+ "ob1t": {
+  "message": "Traffic-light badges"
+ },
+ "ob1": {
+  "message": "When an X post shows signs of misinformation about voting machines, a badge appears next to the author's name. No post is ever hidden."
+ },
+ "ob1y": {
+  "message": "Yellow: the text repeats common misinformation claims."
+ },
+ "ob1r": {
+  "message": "Red: on top of that, the account looks automated or coordinated."
+ },
+ "ob2t": {
+  "message": "Click “why?”"
+ },
+ "ob2": {
+  "message": "One click on the badge explains the alert in plain language, with official links to check. If we got it wrong, click “Not misinformation”."
+ },
+ "ob3t": {
+  "message": "Choose the sensitivity"
+ },
+ "ob3": {
+  "message": "You can change this anytime from the Urna Guard icon in the browser toolbar."
+ },
+ "obPrivacy": {
+  "message": "Everything stays in this browser: no servers, no accounts, no tracking (LGPD). Heuristics are not proof; do not use them to harass anyone."
+ },
+ "next": {
+  "message": "Next"
+ },
+ "back": {
+  "message": "Back"
+ },
+ "finish": {
+  "message": "Finish and open X"
+ },
+ "skip": {
+  "message": "Skip"
+ }
 }

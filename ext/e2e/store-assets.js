@@ -32,7 +32,7 @@ const frame = (title, sub, img, w) => `<!doctype html><html><body style="margin:
   const f = await ctx.newPage();
   await f.setContent(frame('Detecta ação coordenada', 'Texto quase idêntico em várias contas, o mesmo link repetido, rajadas de posts e perfis com cara de falsos.', b64(tmp), 640));
   await f.screenshot({ path: path.join(OUT, 'screenshot-2-coordenacao-1280x800.png') });
-  await f.setContent(frame('100% local e transparente', 'Estatísticas por categoria e exportação em JSON/CSV. Nada sai do seu navegador: sem servidores, sem rastreadores.', b64(tmp2), 360));
+  await f.setContent(frame('Simples e 100% local', 'Liga/desliga, sensibilidade em 3 níveis e contadores do dia. Nada sai do seu navegador: sem servidores, sem rastreadores.', b64(tmp2), 360));
   await f.screenshot({ path: path.join(OUT, 'screenshot-3-popup-1280x800.png') });
   await f.setViewportSize({ width: 440, height: 280 });
   await f.setContent(`<!doctype html><html><body style="margin:0;width:440px;height:280px;overflow:hidden;font-family:system-ui,sans-serif;background:linear-gradient(135deg,#00552b,#007a3d 60%,#0a8f4a);color:#fff;display:flex;flex-direction:column;justify-content:center;padding:0 32px;box-sizing:border-box">

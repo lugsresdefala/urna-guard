@@ -34,11 +34,14 @@
 
   const lc = s => String(s || '').replace(/^@/, '').toLowerCase();
   const listHas = (list, h) => (list || []).map(lc).includes(lc(h));
+  let allowSet = new Set(), blockSet = new Set();   // pré-computados a cada mudança de configuração
+  const T = (k, fb) => { try { return chrome.i18n.getMessage(k) || fb || k; } catch (e) { return fb || k; } };
 
   function loadState(cb) {
     chrome.storage.local.get(['settings', 'feedback'], r => {
       settings = Object.assign({}, S.DEFAULT_SETTINGS, r.settings || {});
       labelAdjust = S.feedbackMultipliers((r.feedback || {}).labels);
+      allowSet = new Set((settings.allowlist || []).map(lc)); blockSet = new Set((settings.blocklist || []).map(lc));
       cb && cb();
     });
   }
@@ -173,30 +176,39 @@
     if (!byHandle.has(h)) byHandle.set(h, new Set());
     byHandle.get(h).add(article);
     if (entry.group) {
-      entry.group.articles = entry.group.articles || new Set();
-      entry.group.articles.add(article);
-      if (entry.group.authors.size >= 2) entry.group.articles.forEach(a => { if (a !== article && a.isConnected) evaluate(a); });
+      const g = entry.group;
+      g.articles = g.articles || new Set();
+      g.articles.add(article);
+      // Só re-pontua os outros posts do grupo quando o nº de contas cruza um limiar que muda o score (2 e 3),
+      // em vez de a cada novo post (evita trabalho O(n²) em copypastas grandes).
+      const n = g.authors.size;
+      if (n !== g.lastN) { const cross = (n >= 2 && !(g.lastN >= 2)) || (n >= 3 && !(g.lastN >= 3)); g.lastN = n;
+        if (cross) g.articles.forEach(a => { if (a !== article && a.isConnected) evaluate(a); }); }
     }
     return st;
   }
 
+  const rendered = new WeakMap();   // article -> assinatura do último selo (evita refazer DOM idêntico)
   function evaluate(article) {
     const st = ingest(article);
-    clearUi(article);
-    if (!st || !settings.enabled) return;
+    if (!st || !settings.enabled) { clearUi(article); rendered.delete(article); return; }
     const post = st.post;
     post.author = Object.assign({}, post.author, profileCache.get(lc(post.author.handle)) || {});
-    if (listHas(settings.allowlist, post.author.handle)) return;
+    if (allowSet.has(lc(post.author.handle))) { clearUi(article); rendered.delete(article); return; }
     const live = tracker.state(st.entry);
     const dis = S.scoreDisinformation({ text: post.text, quoted: post.quoted, extra: post.extra },
       { keywords: settings.keywords || S.DEFAULT_KEYWORDS, labelAdjust });
     const acc = S.scoreAccount(post.author, { text: post.text, dupAuthors: live.dupAuthors, linkAuthors: live.linkAuthors, burst: live.burst,
-      blocklisted: listHas(settings.blocklist, post.author.handle) });
+      blocklisted: blockSet.has(lc(post.author.handle)) });
     const level = S.classify(dis, acc, settings);
+    const sig = level + '|' + dis.score + '|' + acc.score + '|' + dis.signals.length + '|' + acc.signals.length;
+    if (rendered.get(article) === sig && article.dataset.ugLevel === level && (level === 'none' || article.querySelector('.ug-badge'))) return;
+    const wasOpen = !!article.querySelector('.ug-panel:not([hidden])');
+    clearUi(article); rendered.set(article, sig);
     article.dataset.ugLevel = level;
     if (level === 'none') return;
     const id = S.hashString((post.url || post.author.handle) + '|' + post.text + '|' + post.quoted);
-    injectBadge(article, { id, level, dis, acc, post });
+    injectBadge(article, { id, level, dis, acc, post }, wasOpen);
     record({ id, level, dis, acc, post, fingerprint: live.fingerprint });
   }
 
@@ -204,55 +216,82 @@
   function clearUi(article) { article.querySelectorAll('.ug-badge-wrap, .ug-panel').forEach(e => e.remove()); delete article.dataset.ugLevel; }
   function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   const stop = e => { e.stopPropagation(); };
+  const BLOCK_EVENTS = ['click', 'mousedown', 'mouseup', 'pointerdown', 'keydown'];
+  let uid = 0;
 
-  function injectBadge(article, item) {
+  function injectBadge(article, item, open) {
     const { level, dis, acc } = item;
+    const red = level === 'red';
+    const panelId = 'ug-panel-' + (++uid);
     const wrap = el('span', 'ug-badge-wrap');
-    const btn = el('button', 'ug-badge ug-' + level, level === 'red' ? '⛔ Urna Guard: alto risco' : '⚠️ Urna Guard: atenção');
+    // Selo: cor de semáforo + rótulo em linguagem simples + "por quê?" (um clique abre a explicação).
+    const btn = el('button', 'ug-badge ug-' + level);
     btn.type = 'button';
+    btn.append(el('span', 'ug-dot'), el('span', 'ug-lbl', T(red ? 'badgeShortRed' : 'badgeShortYellow')), el('span', 'ug-why', T('why')));
     btn.setAttribute('aria-expanded', 'false');
-    btn.title = 'Ver por que este post foi sinalizado';
+    btn.setAttribute('aria-controls', panelId);
+    btn.setAttribute('aria-label', T(red ? 'badgeRed' : 'badgeYellow') + '. ' + T('badgeAria'));
+    btn.title = T(red ? 'badgeRed' : 'badgeYellow');
     wrap.appendChild(btn);
-    ['click', 'mousedown', 'mouseup', 'pointerdown', 'keydown'].forEach(ev => wrap.addEventListener(ev, stop));
+    BLOCK_EVENTS.forEach(ev => wrap.addEventListener(ev, stop));
 
     const panel = el('div', 'ug-panel ug-panel-' + level);
-    panel.hidden = true;
-    ['click', 'mousedown', 'mouseup', 'pointerdown', 'keydown'].forEach(ev => panel.addEventListener(ev, stop));
-    const head = el('div', 'ug-head');
-    head.append(el('strong', null, level === 'red' ? 'Alto risco' : 'Atenção'),
-      el('span', 'ug-scores', ` · desinformação ${dis.score} · conta ${acc.score}`));
-    panel.appendChild(head);
+    panel.id = panelId; panel.hidden = true;
+    panel.setAttribute('role', 'region'); panel.setAttribute('aria-label', 'Urna Guard');
+    panel.tabIndex = -1;
+    BLOCK_EVENTS.forEach(ev => panel.addEventListener(ev, stop));
+    panel.appendChild(el('p', 'ug-title', T(red ? 'panelTitleRed' : 'panelTitleYellow')));
+
+    // Motivos principais em linguagem simples
+    const reasons = S.topReasons(dis, acc, 3);
+    if (reasons.length) {
+      panel.appendChild(el('div', 'ug-sec', T('mainReasons')));
+      const ul = el('ul', 'ug-reasons');
+      reasons.forEach(r => ul.appendChild(el('li', null, `${T(r.kind === 'dis' ? 'reasonDis' : 'reasonAcc')} “${r.label}”`)));
+      panel.appendChild(ul);
+    }
     if (dis.categories.length) {
       const chips = el('div', 'ug-chips');
       dis.categories.forEach(c => chips.appendChild(el('span', 'ug-chip', S.CATEGORIES[c] || c)));
       panel.appendChild(chips);
     }
-    const section = (title, sigs) => {
-      panel.appendChild(el('div', 'ug-sec', title));
-      const ul = el('ul');
-      (sigs.length ? sigs : [{ label: 'nenhum sinal' }]).forEach(s => {
-        const extra = s.weight != null ? ` (${s.weight > 0 ? '+' : ''}${s.weight}${s.source && s.source !== 'texto' ? ', ' + s.source : ''})` : '';
-        ul.appendChild(el('li', null, s.label + extra));
-      });
-      panel.appendChild(ul);
-    };
-    section('Sinais de desinformação', dis.signals);
-    section('Sinais de conta suspeita', acc.signals);
+    panel.appendChild(el('p', 'ug-todo', T('whatToDo')));
     const links = el('div', 'ug-links');
     FACT_LINKS.forEach(([label, href]) => { const a = el('a', null, label); a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer'; links.appendChild(a); });
     panel.appendChild(links);
+
+    // Detalhes técnicos (pontuações e todos os sinais) recolhidos por padrão
+    const det = el('details', 'ug-details');
+    det.appendChild(el('summary', null, `${T('details')} · ${T('scoreDis')} ${dis.score} · ${T('scoreAcc')} ${acc.score}`));
+    const section = (title, sigs) => {
+      det.appendChild(el('div', 'ug-sec', title));
+      const ul = el('ul');
+      (sigs.length ? sigs : [{ label: T('noSignal') }]).forEach(s => {
+        const extra = s.weight != null ? ` (${s.weight > 0 ? '+' : ''}${s.weight}${s.source && s.source !== 'texto' ? ', ' + s.source : ''})` : '';
+        ul.appendChild(el('li', null, s.label + extra));
+      });
+      det.appendChild(ul);
+    };
+    section(T('secDis'), dis.signals);
+    section(T('secAcc'), acc.signals);
+    panel.appendChild(det);
+
     const actions = el('div', 'ug-actions');
-    const fb = el('button', 'ug-fb', 'Não é desinformação'); fb.type = 'button';
-    fb.title = 'Registra seu feedback localmente, reduz o peso destes sinais e adiciona o autor à sua lista de confiança';
-    const close = el('button', 'ug-close', 'Fechar'); close.type = 'button';
+    const fb = el('button', 'ug-fb', T('notDisinfo')); fb.type = 'button'; fb.title = T('notDisinfoTitle');
+    const close = el('button', 'ug-close', T('close')); close.type = 'button';
     actions.append(fb, close);
     panel.appendChild(actions);
-    panel.appendChild(el('p', 'ug-disc', 'Heurística automática, não é prova. Pode haver falsos positivos. Não use para assediar ninguém. Nada foi ocultado ou denunciado.'));
+    panel.appendChild(el('p', 'ug-disc', T('disclaimer')));
 
-    const toggle = () => { panel.hidden = !panel.hidden; btn.setAttribute('aria-expanded', String(!panel.hidden)); };
-    btn.addEventListener('click', e => { e.preventDefault(); toggle(); });
-    close.addEventListener('click', e => { e.preventDefault(); toggle(); });
+    const setOpen = (open, focus) => {
+      panel.hidden = !open; btn.setAttribute('aria-expanded', String(open));
+      if (focus) (open ? panel : btn).focus({ preventScroll: !open });
+    };
+    btn.addEventListener('click', e => { e.preventDefault(); setOpen(panel.hidden, false); });
+    close.addEventListener('click', e => { e.preventDefault(); setOpen(false, true); });
+    panel.addEventListener('keydown', e => { if (e.key === 'Escape') { e.preventDefault(); setOpen(false, true); } });
     fb.addEventListener('click', e => { e.preventDefault(); giveFeedback(item); });
+    if (open) setOpen(true, false);
 
     const userEl = [...article.querySelectorAll(SEL.userName)].find(e => !quoteWrapOf(e, article));
     if (userEl) userEl.appendChild(wrap); else article.prepend(wrap);
@@ -295,6 +334,8 @@
       const flagged = r.flagged || [];
       const counter = Object.assign({ yellow: 0, red: 0, categories: {} }, r.counter || {});
       counter.categories = counter.categories || {};
+      const d = new Date(), today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      if (!counter.today || counter.today.date !== today) counter.today = { date: today, yellow: 0, red: 0 };
       for (const { prev, item } of batch) {
         const i = flagged.findIndex(f => f.id === item.id);
         if (i >= 0) {
@@ -304,6 +345,7 @@
         } else {
           flagged.push(item);
           counter[item.level] = (counter[item.level] || 0) + 1;
+          counter.today[item.level] = (counter.today[item.level] || 0) + 1;
           item.categories.forEach(c => { counter.categories[c] = (counter.categories[c] || 0) + 1; });
         }
       }
@@ -312,23 +354,60 @@
     });
   }
 
-  // ---------- varredura ----------
-  function scan() {
-    document.querySelectorAll(SEL.tweet).forEach(a => {
-      if (a.parentElement && a.parentElement.closest(SEL.tweet)) return; // ignora artigos aninhados
-      if (!ingested.has(a)) evaluate(a);
-    });
-  }
-  function rescanAll() { document.querySelectorAll(SEL.tweet).forEach(a => { if (!(a.parentElement && a.parentElement.closest(SEL.tweet))) evaluate(a); }); }
+  // ---------- varredura (incremental, em lotes ociosos) ----------
+  // Só processa artigos novos ou alterados; o trabalho é feito em fatias via requestIdleCallback
+  // para não travar a rolagem. Artigos já pontuados ficam num WeakSet e não são relidos.
+  const done = new WeakSet();
+  const dirty = new Set();
+  let profileDirty = true, scheduled = false;
+  const idle = window.requestIdleCallback ? (cb => window.requestIdleCallback(cb, { timeout: 120 }))
+    : (cb => setTimeout(() => cb({ timeRemaining: () => 8, didTimeout: true }), 50));
+  const PROFILE_SEL = '[data-testid="UserName"], [data-testid="UserJoinDate"], ' + SEL.userInfoBox + ', ' + SEL.bio;
+  const isNested = a => a.parentElement && a.parentElement.closest(SEL.tweet);
 
-  let pending = false;
+  function collect(root) {
+    if (root.nodeType !== 1) return;
+    if (root.matches(SEL.tweet)) { if (!isNested(root)) dirty.add(root); }
+    else {
+      const up = root.closest(SEL.tweet);
+      if (up) { const top = isNested(up) ? up.parentElement.closest(SEL.tweet) : up; if (!done.has(top)) dirty.add(top); }
+      else if (root.firstElementChild) root.querySelectorAll(SEL.tweet).forEach(a => { if (!done.has(a) && !isNested(a)) dirty.add(a); });
+    }
+    if (!profileDirty && (root.matches(PROFILE_SEL) || (root.firstElementChild && root.querySelector(PROFILE_SEL)))) profileDirty = true;
+  }
+  function schedule() { if (!scheduled) { scheduled = true; idle(work); } }
+  function work(deadline) {
+    scheduled = false;
+    if (profileDirty) { profileDirty = false; readProfileSources(); }
+    // orçamento por fatia: usa o tempo ocioso disponível, mas nunca mais de ~12 ms (sem tarefas longas)
+    const budget = Math.min(12, Math.max(4, deadline.timeRemaining())); const t0 = performance.now();
+    const it = dirty.values();
+    for (let n = 0; ; n++) {
+      if (n > 0 && performance.now() - t0 > budget) break;
+      const { value: a, done: end } = it.next(); if (end) break;
+      dirty.delete(a);
+      if (!a.isConnected || done.has(a)) continue;
+      evaluate(a);
+      if (ingested.has(a)) done.add(a);    // sem texto ainda: volta quando o X terminar de renderizar
+    }
+    // ainda há fila: continua em fatias curtas via setTimeout (rIC pode ficar raro em abas sem quadros)
+    if (dirty.size && !scheduled) { scheduled = true; setTimeout(() => work({ timeRemaining: () => 8, didTimeout: true }), 0); }
+  }
+  function scan() { document.querySelectorAll(SEL.tweet).forEach(a => { if (!done.has(a) && !isNested(a)) dirty.add(a); }); schedule(); }
+  function rescanAll() { document.querySelectorAll(SEL.tweet).forEach(a => { if (!isNested(a)) evaluate(a); }); }
+
+  const OWN = n => n.nodeType === 1 && n.classList && (n.classList.contains('ug-badge-wrap') || n.classList.contains('ug-panel'));
+  let lastPath = location.pathname;
   const obs = new MutationObserver(muts => {
-    if (muts.every(m => [...m.addedNodes].every(n => n.nodeType === 1 && n.classList && (n.classList.contains('ug-badge-wrap') || n.classList.contains('ug-panel'))))) return;
-    if (pending) return; pending = true;
-    setTimeout(() => { pending = false; readProfileSources(); scan(); }, 150);
+    for (const m of muts) {
+      if (m.target.closest && m.target.closest('.ug-badge-wrap, .ug-panel')) continue;
+      for (const n of m.addedNodes) if (!OWN(n)) collect(n.nodeType === 3 ? n.parentElement || document.body : n);
+    }
+    if (location.pathname !== lastPath) { lastPath = location.pathname; profileDirty = true; }
+    if (dirty.size || profileDirty) schedule();
   });
   loadState(() => {
     obs.observe(document.body, { childList: true, subtree: true });
-    readProfileSources(); scan();
+    readProfileSources(); profileDirty = false; scan();
   });
 })();

@@ -1,6 +1,198 @@
 {
-  "extName": { "message": "Urna Guard – alerta sobre urnas no X", "description": "Nome da extensão (máx. 45 caracteres)" },
-  "extShortName": { "message": "Urna Guard" },
-  "extDescription": { "message": "Sinaliza (sem ocultar) posts no X com sinais de desinformação sobre a urna eletrônica e de contas suspeitas. 100% local." },
-  "actionTitle": { "message": "Urna Guard" }
+ "extName": {
+  "message": "Urna Guard – alerta sobre urnas no X",
+  "description": "Nome da extensão (máx. 45 caracteres)"
+ },
+ "extShortName": {
+  "message": "Urna Guard"
+ },
+ "extDescription": {
+  "message": "Sinaliza (sem ocultar) posts no X com sinais de desinformação sobre a urna eletrônica e de contas suspeitas. 100% local."
+ },
+ "actionTitle": {
+  "message": "Urna Guard"
+ },
+ "badgeYellow": {
+  "message": "Atenção: pode ser desinformação"
+ },
+ "badgeRed": {
+  "message": "Alto risco: desinformação + conta suspeita"
+ },
+ "badgeShortYellow": {
+  "message": "Atenção"
+ },
+ "badgeShortRed": {
+  "message": "Alto risco"
+ },
+ "why": {
+  "message": "por quê?"
+ },
+ "badgeAria": {
+  "message": "Urna Guard: ver por que este post foi sinalizado"
+ },
+ "panelTitleYellow": {
+  "message": "Atenção: este post repete afirmações comuns de desinformação sobre as urnas."
+ },
+ "panelTitleRed": {
+  "message": "Alto risco: afirmações de desinformação vindas de uma conta com sinais de automação ou coordenação."
+ },
+ "mainReasons": {
+  "message": "Principais motivos"
+ },
+ "reasonDis": {
+  "message": "o texto fala em"
+ },
+ "reasonAcc": {
+  "message": "a conta tem"
+ },
+ "whatToDo": {
+  "message": "O que fazer: confira a informação numa fonte oficial antes de compartilhar."
+ },
+ "details": {
+  "message": "Detalhes técnicos"
+ },
+ "secDis": {
+  "message": "Sinais de desinformação"
+ },
+ "secAcc": {
+  "message": "Sinais de conta suspeita"
+ },
+ "noSignal": {
+  "message": "nenhum sinal"
+ },
+ "scoreDis": {
+  "message": "desinformação"
+ },
+ "scoreAcc": {
+  "message": "conta"
+ },
+ "notDisinfo": {
+  "message": "Não é desinformação"
+ },
+ "notDisinfoTitle": {
+  "message": "Registra seu feedback só neste navegador, reduz o peso destes sinais e adiciona o autor à sua lista de confiança"
+ },
+ "close": {
+  "message": "Fechar"
+ },
+ "disclaimer": {
+  "message": "Heurística automática, não é prova. Pode haver falsos positivos. Não use para assediar ninguém. Nada foi ocultado ou denunciado."
+ },
+ "popOn": {
+  "message": "Ligado"
+ },
+ "popOff": {
+  "message": "Desligado"
+ },
+ "popOnHint": {
+  "message": "Os selos aparecem nos posts do X."
+ },
+ "popOffHint": {
+  "message": "Pausado: nenhum post é analisado."
+ },
+ "popToday": {
+  "message": "Hoje"
+ },
+ "popTotal": {
+  "message": "no total"
+ },
+ "sens": {
+  "message": "Sensibilidade"
+ },
+ "sensLow": {
+  "message": "Baixa"
+ },
+ "sensMedium": {
+  "message": "Média"
+ },
+ "sensHigh": {
+  "message": "Alta"
+ },
+ "sensLowHint": {
+  "message": "Só casos bem evidentes. Menos alertas."
+ },
+ "sensMediumHint": {
+  "message": "Equilíbrio recomendado."
+ },
+ "sensHighHint": {
+  "message": "Mais alertas, mais falsos positivos."
+ },
+ "sensCustom": {
+  "message": "Personalizada nas opções. Escolha um nível para voltar ao padrão."
+ },
+ "popData": {
+  "message": "Dados salvos e exportação"
+ },
+ "byCategory": {
+  "message": "Por categoria"
+ },
+ "saved": {
+  "message": "salvos"
+ },
+ "exportJson": {
+  "message": "Exportar JSON"
+ },
+ "exportCsv": {
+  "message": "Exportar CSV"
+ },
+ "clear": {
+  "message": "Limpar"
+ },
+ "howItWorks": {
+  "message": "Como funciona"
+ },
+ "moreOptions": {
+  "message": "Mais opções"
+ },
+ "popDisc": {
+  "message": "Heurísticas, não são prova. Nunca oculta nem denuncia posts. Dados só neste navegador (LGPD)."
+ },
+ "obTitle": {
+  "message": "Bem-vindo ao Urna Guard"
+ },
+ "obStep": {
+  "message": "Passo"
+ },
+ "obOf": {
+  "message": "de"
+ },
+ "ob1t": {
+  "message": "Selos com cor de semáforo"
+ },
+ "ob1": {
+  "message": "Quando um post no X tem sinais de desinformação sobre as urnas, aparece um selo ao lado do nome de quem postou. Nenhum post é escondido."
+ },
+ "ob1y": {
+  "message": "Amarelo: o texto repete afirmações comuns de desinformação."
+ },
+ "ob1r": {
+  "message": "Vermelho: além disso, a conta parece automatizada ou coordenada."
+ },
+ "ob2t": {
+  "message": "Clique em “por quê?”"
+ },
+ "ob2": {
+  "message": "Um clique no selo mostra, em linguagem simples, os motivos do alerta e links oficiais do TSE para conferir. Se errarmos, clique em “Não é desinformação”."
+ },
+ "ob3t": {
+  "message": "Escolha a sensibilidade"
+ },
+ "ob3": {
+  "message": "Você pode mudar isso a qualquer momento no ícone do Urna Guard na barra do navegador."
+ },
+ "obPrivacy": {
+  "message": "Tudo fica neste navegador: sem servidores, sem contas, sem rastreamento (LGPD). Heurísticas não são prova; não use para assediar ninguém."
+ },
+ "next": {
+  "message": "Próximo"
+ },
+ "back": {
+  "message": "Voltar"
+ },
+ "finish": {
+  "message": "Concluir e abrir o X"
+ },
+ "skip": {
+  "message": "Pular"
+ }
 }

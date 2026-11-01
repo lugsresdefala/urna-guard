@@ -1,4 +1,4 @@
-# Store listing (English): Urna Guard 2.0.0
+# Store listing (English): Urna Guard 2.1.0
 
 ## Name (max 45 characters)
 Urna Guard – voting-machine alerts on X
