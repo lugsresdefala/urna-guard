@@ -22,7 +22,7 @@ jobs:
         with:
           enablement: true
       - name: Preparar site (sem o código-fonte)
-        run: mkdir _site && cp -r index.html privacidade.html img downloads .nojekyll _site/
+        run: mkdir _site && cp -r index.html privacidade.html en img downloads .nojekyll _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

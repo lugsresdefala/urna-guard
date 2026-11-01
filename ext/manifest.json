@@ -1,20 +1,50 @@
 {
   "manifest_version": 3,
-  "name": "Urna Guard – alerta sobre urnas no X",
-  "short_name": "Urna Guard",
+  "name": "__MSG_extName__",
+  "short_name": "__MSG_extShortName__",
   "version": "2.0.0",
-  "description": "Sinaliza (sem ocultar) posts no X com sinais de desinformação sobre a urna eletrônica e de contas possivelmente inautênticas. 100% local.",
-  "permissions": ["storage"],
-  "background": { "service_worker": "src/background.js" },
-  "content_scripts": [{
-    "matches": ["https://x.com/*", "https://twitter.com/*", "https://mobile.twitter.com/*", "https://mobile.x.com/*"],
-    "js": ["src/scoring.js", "src/content.js"],
-    "css": ["src/content.css"],
-    "run_at": "document_idle"
-  }],
-  "action": { "default_popup": "src/popup.html", "default_title": "Urna Guard",
-    "default_icon": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" } },
-  "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "description": "__MSG_extDescription__",
+  "permissions": [
+    "storage"
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://x.com/*",
+        "https://twitter.com/*",
+        "https://mobile.twitter.com/*",
+        "https://mobile.x.com/*"
+      ],
+      "js": [
+        "src/scoring.js",
+        "src/content.js"
+      ],
+      "css": [
+        "src/content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_title": "__MSG_actionTitle__",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "options_page": "src/options.html",
-  "content_security_policy": { "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'none'" }
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'none'"
+  },
+  "default_locale": "pt_BR"
 }

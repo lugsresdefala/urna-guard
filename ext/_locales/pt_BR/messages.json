@@ -1,0 +1,6 @@
+{
+  "extName": { "message": "Urna Guard – alerta sobre urnas no X", "description": "Nome da extensão (máx. 45 caracteres)" },
+  "extShortName": { "message": "Urna Guard" },
+  "extDescription": { "message": "Sinaliza (sem ocultar) posts no X com sinais de desinformação sobre a urna eletrônica e de contas suspeitas. 100% local." },
+  "actionTitle": { "message": "Urna Guard" }
+}

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy policy – Urna Guard</title>
+<meta name="description" content="Urna Guard privacy policy: no data collection, 100% local.">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'">
+<link rel="alternate" hreflang="pt-BR" href="../privacidade.html">
+<link rel="alternate" hreflang="en" href="privacidade.html">
+<link rel="alternate" hreflang="x-default" href="../privacidade.html">
+<link rel="icon" href="../img/icon.png">
+<style>body{margin:0;font:18px/1.7 system-ui,-apple-system,"Segoe UI",sans-serif;color:#14201a;background:#f5f7f5}main{max-width:780px;margin:auto;padding:32px 22px 60px;background:#fff;min-height:100vh}
+h1{font-size:32px;line-height:1.2}h2{font-size:22px;margin-top:32px;color:#004d26}a{color:#0a55a8}:focus-visible{outline:3px solid #0a55a8;outline-offset:3px}
+.top{display:flex;align-items:center;gap:10px;font-weight:800}table{border-collapse:collapse;width:100%;font-size:16px}td,th{border:1px solid #d5ddd8;padding:8px;text-align:left;vertical-align:top}.lang{float:right;display:inline-flex;border:2px solid #d5ddd8;border-radius:10px;overflow:hidden}.lang a{padding:4px 10px;font-weight:700;text-decoration:none;color:#14201a;font-size:15px}.lang a[aria-current=true]{background:#006b35;color:#fff}</style>
+</head>
+<body><main>
+<div class="lang" role="group" aria-label="Language / Idioma"><a href="../privacidade.html" hreflang="pt-BR" lang="pt-BR" aria-current="false" aria-label="Português (Brasil)">PT</a><a href="privacidade.html" hreflang="en" lang="en" aria-current="true">EN</a></div>
+<p class="top"><img src="../img/icon.png" alt="" width="32" height="32"> <a href="./">Urna Guard</a></p>
+<h1>Privacy policy</h1>
+<p><b>Extension:</b> Urna Guard (Chrome, Edge and Firefox), version 2.0.0. <b>Effective date:</b> November 1, 2026. The Portuguese version is the reference text.</p>
+<h2>Summary</h2>
+<p>Urna Guard <b>does not collect, transmit, sell or share</b> personal data. All processing happens in your browser, and the extension makes no network connections.</p>
+<h2>What data is processed and where</h2>
+<table>
+<tr><th>Data</th><th>Purpose</th><th>Where it is kept</th></tr>
+<tr><td>Text, username, display name and photo (default or not) of posts <i>already shown on your screen</i> on x.com/twitter.com</td><td>Compute the alert and show the badge</td><td>Tab memory (discarded when the tab closes)</td></tr>
+<tr><td>Flagged posts (username, text excerpt, link, signals and date)</td><td>Counter, statistics and exports you start yourself</td><td>The browser's <code>storage.local</code>, capped at 1000 items</td></tr>
+<tr><td>Settings, trust and watch lists, "not disinformation" feedback</td><td>Personalize the alerts</td><td>The browser's <code>storage.local</code></td></tr>
+</table>
+<h2>What the extension does not do</h2>
+<ul><li>It sends no data to any server, the developer's or anyone else's. No telemetry, analytics or ads.</li>
+<li>It uses no cookies, passwords, tokens or private X APIs.</li>
+<li>It does not hide or report posts, and takes no action on your account.</li>
+<li>It loads no remote code.</li></ul>
+<h2>Permissions</h2>
+<ul><li><b>storage:</b> keep settings and flagged items locally.</li>
+<li><b>Access to x.com and twitter.com:</b> read the posts on screen to show badges. It runs on no other site.</li></ul>
+<h2>Your rights (Brazil's LGPD, Law 13.709/2018)</h2>
+<p>Because the data stays only on your device, you have full control over it:</p>
+<ul><li><b>Access and portability:</b> "Export JSON/CSV" in the extension popup.</li>
+<li><b>Deletion:</b> "Clear data" in the popup or settings. Removing the extension makes the browser delete all of its data.</li>
+<li><b>Correction:</b> lists and settings can be edited at any time.</li></ul>
+<p>Exported files contain third parties' personal data (public usernames and posts). If you share them, you are responsible: use them only for legitimate purposes such as research or fact-checking, and never for harassment.</p>
+<h2>This website</h2>
+<p>This website uses no cookies, trackers, or external fonts or scripts.</p>
+<h2>Changes and contact</h2>
+<p>Any change to this policy will be published on this page with a new effective date. Contact: <a id="contato" href="mailto:tiagoog@lugaresdefala.com">tiagoog@lugaresdefala.com</a>.</p>
+<p><a href="./">← Back</a></p>
+</main>
+<script>
+(function(){try{var k='ug-lang',cur=document.documentElement.lang.slice(0,2);
+document.querySelectorAll('.lang a').forEach(function(a){a.addEventListener('click',function(){localStorage.setItem(k,a.getAttribute('hreflang').slice(0,2));});});
+var pref=localStorage.getItem(k);
+if(!pref&&cur==='pt'&&!/^pt/i.test(navigator.language||'pt')){location.replace('privacidade.html');}
+else if(pref&&pref!==cur){location.replace(pref==='en'?'privacidade.html':'../privacidade.html');}
+}catch(e){}})();
+</script>
+</body></html>

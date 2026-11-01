@@ -5,7 +5,7 @@ import json, os, zipfile
 ROOT = os.path.dirname(os.path.abspath(__file__))
 m = json.load(open(os.path.join(ROOT, 'manifest.json'), encoding='utf-8'))
 v = m['version']
-FILES = ['src', 'icons']
+FILES = ['src', 'icons', '_locales']
 os.makedirs(os.path.join(ROOT, 'dist'), exist_ok=True)
 
 def pack(name, manifest):

@@ -1,12 +1,16 @@
 <!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Política de privacidade – Urna Guard</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'unsafe-inline'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<link rel="alternate" hreflang="pt-BR" href="privacidade.html">
+<link rel="alternate" hreflang="en" href="en/privacidade.html">
+<link rel="alternate" hreflang="x-default" href="privacidade.html">
 <link rel="icon" href="img/icon.png">
 <style>body{margin:0;font:18px/1.7 system-ui,-apple-system,"Segoe UI",sans-serif;color:#14201a;background:#f5f7f5}main{max-width:780px;margin:auto;padding:32px 22px 60px;background:#fff;min-height:100vh}
 h1{font-size:32px;line-height:1.2}h2{font-size:22px;margin-top:32px;color:#004d26}a{color:#0a55a8}:focus-visible{outline:3px solid #0a55a8;outline-offset:3px}
-.top{display:flex;align-items:center;gap:10px;font-weight:800}table{border-collapse:collapse;width:100%;font-size:16px}td,th{border:1px solid #d5ddd8;padding:8px;text-align:left;vertical-align:top}</style></head>
+.top{display:flex;align-items:center;gap:10px;font-weight:800}table{border-collapse:collapse;width:100%;font-size:16px}td,th{border:1px solid #d5ddd8;padding:8px;text-align:left;vertical-align:top}.lang{float:right;display:inline-flex;border:2px solid #d5ddd8;border-radius:10px;overflow:hidden}.lang a{padding:4px 10px;font-weight:700;text-decoration:none;color:#14201a;font-size:15px}.lang a[aria-current=true]{background:#006b35;color:#fff}</style></head>
 <body><main>
+<div class="lang" role="group" aria-label="Idioma / Language"><a href="privacidade.html" hreflang="pt-BR" lang="pt-BR" aria-current="true">PT</a><a href="en/privacidade.html" hreflang="en" lang="en" aria-current="false" aria-label="English">EN</a></div>
 <p class="top"><img src="img/icon.png" alt="" width="32" height="32"> <a href="index.html">Urna Guard</a></p>
 <h1>Política de privacidade</h1>
 <p><b>Extensão:</b> Urna Guard (Chrome, Edge e Firefox), versão 2.0.0. <b>Vigência:</b> 1º de novembro de 2026.</p>
@@ -45,4 +49,12 @@ h1{font-size:32px;line-height:1.2}h2{font-size:22px;margin-top:32px;color:#004d2
 <h2>Alterações e contato</h2>
 <p>Qualquer mudança nesta política será publicada nesta página, com nova data de vigência. Contato: <a id="contato" href="mailto:tiagoog@lugaresdefala.com">tiagoog@lugaresdefala.com</a>.</p>
 <p><a href="index.html">← Voltar</a></p>
-</main></body></html>
+</main><script>
+(function(){try{var k='ug-lang',cur=document.documentElement.lang.slice(0,2);
+document.querySelectorAll('.lang a').forEach(function(a){a.addEventListener('click',function(){localStorage.setItem(k,a.getAttribute('hreflang').slice(0,2));});});
+var pref=localStorage.getItem(k);
+if(!pref&&cur==='pt'&&!/^pt/i.test(navigator.language||'pt')){location.replace('en/privacidade.html');}
+else if(pref&&pref!==cur){location.replace(pref==='en'?'en/privacidade.html':'privacidade.html');}
+}catch(e){}})();
+</script>
+</body></html>
