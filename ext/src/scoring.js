@@ -37,9 +37,15 @@
     K('fraude', 4, 'fraude nas urnas', 'fraude (nas|na|das|da|em|nessa|nesta) (urnas?|eleic(ao|oes))'),
     K('fraude', 4, 'urna fraudada', 'urnas? (fraudad[ao]s?|fraudulentas?|viciadas?|adulteradas?)'),
     K('fraude', 4, 'eleição roubada/fraudada', 'eleic(ao|oes) (roubadas?|fraudadas?|manipuladas?)'),
-    K('fraude', 4, 'roubaram a eleição', 'roubaram a eleicao|roubo (da|na) eleicao'),
+    K('fraude', 4, 'roubaram a eleição', 'roubaram (a |nosa |a nosa )?eleic(ao|oes)|roubo (da|na) eleicao|eleic(ao|oes) (?:(?!nao )[a-z]+ )?(foi|foram) (roubad|fraudad|manipulad)[ao]s?|foi fraudada a (democracia|eleicao)'),
+    K('fraude', 4, 'urnas foram fraudadas', 'urnas? (foram|foi|estao|eram|sao) (fraudad|manipulad|adulterad)[ao]s?|urnas? (sao|eram) (uma )?fraude'),
+    K('fraude', 4, 'fraudaram a eleição', '(fraudou|fraudaram|roubou|burlou) (as |a )?eleic(ao|oes)'),
+    K('fraude', 3, 'ladrões roubaram', 'ladroes (comunistas )?(roubaram|fraudaram)'),
+    K('fraude', 3, 'fraude eleitoral', 'fraude eleitoral'),
+    K('fraude', 3, 'inverteram o resultado', 'inverteram (o |os )?resultados?|software que (rouba|desvia)'),
     K('fraude', 3, 'votos desviados', 'votos? (desviados?|roubados?|trocados?|transferidos?)'),
-    K('fraude', 3, 'fraude comprovada', 'fraude (comprovada|escancarada|confirmada)'),
+    K('fraude', 3, 'fraude comprovada', 'fraude (comprovada|escancarada|confirmada)|fraude (ta|esta|e) (bem |muito )?(nitida|clara|obvia|escancarada)|terreno (pra|para) (a )?fraude'),
+    K('fraude', 3, 'vitória "impossível"', '(jamais|nunca) ganharia (essa |esta |a |uma )?eleicao'),
     K('fraude', 3, 'votos sumiram', '(milhoes|milhares) de votos (sumiram|desapareceram|anulados)'),
     K('codigo', 4, 'código-fonte secreto', 'codigo[- ]?fonte (secreto|escondido|oculto|fechado|adulterado)'),
     K('codigo', 3, 'algoritmo secreto', 'algoritmo (do tse|das urnas|secreto)'),
@@ -51,12 +57,13 @@
     K('voto_impresso', 2, 'voto impresso única saída', 'voto (auditavel|impresso) (e|eh) a unica (forma|saida)'),
     K('voto_impresso', 3, 'urna não auditável', 'urnas? (nao sao|nunca foram|nao e|nao eh) auditave(l|is)'),
     K('voto_impresso', 3, 'impossível auditar', 'impossivel auditar (a |as )?urnas?'),
-    K('golpe', 3, 'intervenção já', 'intervencao (militar|federal)( ja)?'),
+    K('golpe', 3, 'intervenção já', 'intervencao militar|intervencao federal (ja|no brasil|nacional)|sos intervencao'),
     K('golpe', 3, 'apelo às Forças Armadas', 'forcas armadas (salvem|intervenham|assumam|ja)|sos forcas armadas'),
     K('golpe', 2, 'artigo 142', 'artigo 142|art 142'),
+    K('golpe', 3, 'presidente "legítimo" derrotado', '(verdadeiro|legitimo) presidente eleito|presidente (eleito )?legitimo|legitimo presidente'),
     K('golpe', 2, 'anular a eleição', 'anular (a |as )?eleic(ao|oes)'),
     K('golpe', 2, 'não reconhecer resultado', '(nao|jamais) (reconhecemos|aceitaremos|aceitamos) (o |a )?(resultado|eleicao)'),
-    K('ataques', 4, 'TSE manipula', 'tse (manipula|manipulou|fraudou|frauda|roubou|rouba)'),
+    K('ataques', 4, 'TSE manipula', '(tse|stf) (manipula|manipulou|fraudou|frauda|roubou|rouba|burlou)|(manipulad|fraudad)[ao]s? pel[ao] (tse|stf)'),
     K('ataques', 2, 'STF/TSE comprado', '(stf|tse) (comprado|vendido|aparelhado)'),
     K('ataques', 2, 'ditadura da toga', 'ditadura (do|da) (toga|judiciario|tse)'),
     K('ataques', 4, 'ministros fraudaram', 'ministros? do tse (fraudaram|manipularam)'),
@@ -67,7 +74,7 @@
     K('prevotadas', 3, 'apertei X e saiu Y', 'apert(ei|ou) (o )?\\d+ e (apareceu|saiu|deu) (o )?\\d+'),
     K('prevotadas', 3, 'voto computado para outro', 'votos? (computados?|contados?) para (o )?outro candidato'),
     K('apuracao', 3, 'apuração secreta', 'apuracao (e |eh |foi |e feita em |feita em )?secreta|apuracao (em )?segredo'),
-    K('apuracao', 3, 'sala secreta', 'sala secreta|sala escura'),
+    K('apuracao', 3, 'sala secreta', '^(?=.*(tse|urna|eleic|apuracao|voto|stf)).*(sala secreta|sala escura)'),
     K('apuracao', 3, 'contagem secreta', 'contagem (secreta|feita em segredo|em sala fechada)'),
     K('apuracao', 3, 'boletins de urna falsos', 'boletins? de urna (falsos?|adulterados?|forjados?)'),
     K('apuracao', 3, 'totalização manipulada', 'totalizacao (secreta|manipulada)'),
@@ -81,8 +88,9 @@
     K('venezuela', 2, 'mesmo sistema da Venezuela', 'mesmo sistema da venezuela|como na venezuela'),
     K('venezuela', 3, 'urnas fabricadas no exterior', 'urnas? (feitas|fabricadas) (na|pela) (china|venezuela)'),
     K('eleitores', 3, 'mortos votaram', 'mortos (votaram|votando)|eleitores mortos'),
+    K('eleitores', 3, 'eleitores fantasmas', 'eleitores fantasmas'),
     K('eleitores', 3, 'mais votos que eleitores', 'mais votos (do )?que eleitores'),
-    K('hashtags', 3, 'hashtag de narrativa', '#?(fraudenasurnas|urnafraudada|votoimpressoja|tsefraude|brazilwasstolen|brasilfoiroubado|eleicaofraudada|sosffaa|intervencaofederal)')
+    K('hashtags', 3, 'hashtag de narrativa', '#?(fraudenasurnas|urnafraudada|votoimpressoja|tsefraude|brazilwasstolen|brasilfoiroubado|eleicaofraudada|sosffaa|intervencaofederal|savebrazil|fraudeeleitoral)')
   ];
 
   // Contexto de checagem, citação, ironia ou negação: reduz o score.
@@ -92,7 +100,11 @@
     { kind: 'oficial', weight: -4, label: 'TSE esclarece', pattern: 'tse esclarece|fato ou boato|justica eleitoral (esclarece|informa)|segundo o tse' },
     { kind: 'semprova', weight: -3, label: 'sem provas', pattern: 'nao ha (provas?|evidencias?|indicios)|sem (nenhuma )?provas?|(nunca|jamais) (houve|foi comprovad)' },
     { kind: 'citacao', weight: -2, label: 'citação/ironia ("dizem que")', pattern: 'dizem que|alegam que|alegacao (de|que)|tem gente (dizendo|achando)|mentira que|ainda tem quem (acredite|ache)|acreditam que' },
-    { kind: 'negacao', weight: -4, label: 'negação explícita', pattern: 'nao (existe|houve|ha|teve) fraude|fraude (nunca|jamais) (existiu|houve)|urnas? (sao|e|eh) (seguras?|confiave(l|is)|auditave(l|is))' }
+    { kind: 'negacao', weight: -4, label: 'negação explícita', pattern: 'nao (existe|houve|ha|teve) fraude|fraude (nunca|jamais) (existiu|houve)|urnas? (sao|e|eh) (seguras?|confiave(l|is)|auditave(l|is))|nao (creio|acredito) que (houve|teve) fraude|zero provas|(nunca|jamais) (foi|foram) (hackead|fraudad|invadid)[ao]s?' },
+    // 2.1.1: ironia, deboche e atribuição ("vão falar de fraude", "mimimi", "farsa de fraude") vindos da revisão manual de casos reais
+    { kind: 'deboche', weight: -3, label: 'ironia/deboche da narrativa', pattern: 'mi ?mi ?mi|chororo|papo de fraude|discurso (de|da|das) (fraude|urnas?)|narrativa (de|da) fraude|falsa narrativa|lenga ?lenga|troca o disco|delirio|conspiracao de urna|farsa (de|da) fraude|vai vendo|faz pix|nao cola|urnas? fraudadas? que (elegeu|elegeram)' },
+    { kind: 'atribuicao', weight: -2, label: 'atribui a narrativa a outros', pattern: '(vao|vai|vem|venha|voltarao a|vao voltar a) (com |falar |gritar |alegar )(de |em |papo de )?fraude|se (voces|vcs) (vao|forem) alegar|quer(em)? falar de fraude|falou fraude|acusaria fraude|(alegou|alegam|alegar) fraude|gritar,? fraude' },
+    { kind: 'risada', weight: -1, label: 'risada/deboche', pattern: '(^| )(ka(ka)+|ha(ha)+|ks(ks)+|rs(rs)+)( |$)' }
   ];
 
   const BIO_TERMS = [
@@ -268,6 +280,8 @@
    * input: string ou { text, quoted, extra: [alt-texts, títulos de cards] }
    * opts: { keywords, labelAdjust }
    */
+  const QUOTE_RE = /["“”«»]([^"“”«»\n]{3,80})["“”«»]/;
+  const QUOTE_RE_G = /["“”«»]([^"“”«»\n]{3,80})["“”«»]/g;
   function scoreDisinformation(input, opts) {
     if (Array.isArray(opts)) opts = { keywords: opts };
     opts = opts || {};
@@ -283,12 +297,17 @@
     for (const seg of segments) {
       if (!seg.raw) continue;
       const canon = canonical(seg.raw);
+      // 2.1.1: trechos entre aspas ("eleição fraudada") são citação; se o padrão só aparece entre aspas, pesa 1/4
+      const hasQ = seg.source === 'texto' && QUOTE_RE.test(seg.raw);
+      const unquoted = hasQ ? canonical(seg.raw.replace(QUOTE_RE_G, ' ')) : canon;
+      const insideQ = hasQ ? canonical((seg.raw.match(QUOTE_RE_G) || []).join(' \n ')) : '';
       for (const k of kws) {
         if (seen.has(k.label) || !k.re.test(canon)) continue;
         seen.add(k.label);
-        const w = Math.round(k.weight * seg.factor * (adj[k.label] != null ? adj[k.label] : 1) * 10) / 10;
+        const quotedOnly = hasQ && !k.re.test(unquoted) && k.re.test(insideQ);
+        const w = Math.round(k.weight * seg.factor * (quotedOnly ? 0.25 : 1) * (adj[k.label] != null ? adj[k.label] : 1) * 10) / 10;
         score += w;
-        signals.push({ label: k.label, weight: w, category: k.category, source: seg.source });
+        signals.push({ label: k.label + (quotedOnly ? ' (entre aspas)' : ''), weight: w, category: k.category, source: seg.source });
       }
     }
     if (score > 0) {
@@ -298,6 +317,10 @@
       if (ctx.length && !mainHits) {
         // o tweet comenta/desmente o tweet citado: não herdar a narrativa
         signals.forEach(s => { score -= s.weight; s.weight = 0; s.label += ' (citado para comentar)'; });
+      }
+      // 2.1.1: com ironia/deboche ou atribuição a terceiros, a narrativa pesa 40% (quem zomba da tese também usa as palavras dela)
+      if (ctx.some(c => c.kind === 'deboche' || c.kind === 'atribuicao')) {
+        signals.forEach(s => { if (s.weight > 0) { const nw = Math.round(s.weight * 0.4 * 10) / 10; score -= s.weight - nw; s.weight = nw; } });
       }
       for (const c of ctx) { score += c.weight; signals.push({ label: c.label, weight: c.weight, category: 'contexto' }); }
       const text = String(inp.text || '');
@@ -371,6 +394,9 @@
     if (dup >= 2) add(dup >= 3 ? 3 : 2, `texto (quase) idêntico postado por ${dup} contas nesta sessão`);
     if ((ctx.linkAuthors || 0) >= 3) add(2, `mesmo link compartilhado por ${ctx.linkAuthors} contas nesta sessão`);
     if ((ctx.burst || 0) >= 5) add(2, `rajada: ${ctx.burst} posts desta conta em 10 min`);
+    // 2.1.1: inundação de respostas: a mesma conta repete o mesmo texto em vários posts/respostas
+    const rep = ctx.selfRepeats || 0;
+    if (rep >= 3) add(rep >= 5 ? 3 : 2, `mesmo texto repetido ${rep} vezes por esta conta (inundação de respostas)`);
     if (ctx.blocklisted) add(3, 'conta na sua lista de observação');
     if (author.verified && score > 0) add(-1, 'selo de verificação (peso reduzido)');
     return { score: Math.max(0, score), signals };
@@ -410,6 +436,8 @@
             if (groups.length > o.maxEntries) { const old = groups.shift(); if (byKey.get(old.key) === old) byKey.delete(old.key); }
           }
           group.authors.add(handle);
+          if (!group.byAuthor) group.byAuthor = new Map();
+          const ids = group.byAuthor.get(handle) || new Set(); ids.add(post.id || (key + '|' + time)); group.byAuthor.set(handle, ids);
         }
         const linkKeys = [...new Set((post.links || []).map(normalizeLink).filter(Boolean))];
         for (const l of linkKeys) { if (!links.has(l)) links.set(l, new Set()); links.get(l).add(handle); }
@@ -422,7 +450,8 @@
         const linkAuthors = Math.max(0, ...entry.linkKeys.map(l => links.get(l).size));
         const now = Math.max(...(authorPosts.get(entry.handle) || [{ time: 0 }]).map(p => p.time));
         const burst = (authorPosts.get(entry.handle) || []).filter(p => now - p.time <= o.burstWindowMs).length;
-        return { dupAuthors: entry.group ? entry.group.authors.size : 1, linkAuthors, burst, fingerprint: entry.group ? entry.group.sim : null };
+        const selfRepeats = entry.group && entry.group.byAuthor ? (entry.group.byAuthor.get(entry.handle) || new Set()).size : 1;
+        return { dupAuthors: entry.group ? entry.group.authors.size : 1, linkAuthors, burst, selfRepeats, fingerprint: entry.group ? entry.group.sim : null };
       },
       size() { return groups.length; },
       stats() { return { groups: groups.length, comparisons }; }

@@ -18,7 +18,7 @@ const res = []; let failed = 0; const check = (n, c, i) => { res.push(`${c ? 'PA
       await p.goto(url); await p.waitForLoadState('load');
       const txt = await p.textContent('#primary'); const href = await p.getAttribute('#primary', 'href');
       if (mobile) check(`${lang} mobile: botão leva aos passos`, /#instalar/.test(href), txt);
-      else check(`${lang} ${b}: botão grande certo`, href.includes(b === 'firefox' ? 'firefox-2.1.0.zip' : 'chrome-2.1.0.zip') && new RegExp({ chrome: 'Chrome', edge: 'Edge', firefox: 'Firefox' }[b]).test(txt), `${txt} → ${href}`);
+      else check(`${lang} ${b}: botão grande certo`, href.includes(b === 'firefox' ? 'firefox-2.1.1.zip' : 'chrome-2.1.1.zip') && new RegExp({ chrome: 'Chrome', edge: 'Edge', firefox: 'Firefox' }[b]).test(txt), `${txt} → ${href}`);
       check(`${lang} ${b}: guia em 3 passos com ilustrações`, (await p.$$('#panel .steps > li')).length === 3 && (await p.textContent('#s2t')).length > 5 && (await p.textContent('#m4')).trim().length > 3);
       const ov = await p.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       check(`${lang} ${b}: sem rolagem horizontal`, ov <= 0, `excesso ${ov}px`);

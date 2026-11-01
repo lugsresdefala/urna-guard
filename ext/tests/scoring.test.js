@@ -222,3 +222,68 @@ test('topReasons ordena por peso e ignora contexto negativo', () => {
   const r = S.topReasons(d, a, 3);
   assert.equal(r.length, 3); assert.equal(r[0].label, 'fraude nas urnas'); assert.ok(r.every(x => x.weight > 0));
 });
+
+// ---- 2.1.1: casos reais da revisão manual (posts públicos do X, out/nov 2026) ----
+test('2.1.1 narrativa: "Ladrões comunistas roubaram a nossa eleição" é detectada', () => {
+  const r = dis('@WhiteHouse O Brasil pede socorro!! Ladrões comunistas roubaram a nossa eleição. Fraude eleitoral. #SAVEBRAZIL');
+  assert.ok(r.score >= 6, String(r.score));
+  for (const l of ['roubaram a eleição', 'ladrões roubaram', 'fraude eleitoral', 'hashtag de narrativa']) assert.ok(labels(r).includes(l), l);
+});
+
+test('2.1.1 narrativa: variações reais de "eleição/urnas foram fraudadas"', () => {
+  for (const t of ['Ok. Tudo mundo já viu que a eleição foi roubada. Alguém vai fazer alguma coisa?',
+    'todos sabemos que as urnas foram fraudadas, a guerra não é um contra o outro',
+    'Todos nós sabemos que o STF fraudou as eleições mais uma vez na cara de pau',
+    'Quem é que não viu que estas urnas são uma fraude',
+    'Vocês roubaram o povo Brasileiro, essas eleições novamente foram fraudadas!',
+    'Flávio é nosso Presidente legítimo! lula fraudou as eleições']) assert.ok(dis(t).score >= 3, t);
+});
+
+test('2.1.1 ironia e deboche reduzem o score (falsos positivos reais da 2.1.0)', () => {
+  for (const t of ['TENHO CERTEZA QUE SE VCS GANHAREM NAO TERÁ O MI MI MI DE FRAUDE NAS URNAS. SE PERDEREM NAO COMECEM DINOVO O MI MI MI DAS URNAS FRAUDADAS',
+    'Falou "Fraude nas urnas" já sei que faz pix para o Bolsonaro',
+    'Vcs ficam espalhando mentiras, aí chega outubro e Lula é tetra, aí quer falar de fraude nas urnas, voto impresso',
+    'Qual vai ser a sua narrativa agora? Urnas fraudadas? Troca o disco parceiro...',
+    'Daqui a pouco voltarão a gritar, fraude nas urnas, TSE é de esquerda, voto impresso, blá, blá, blá.',
+    'Deixo conspiração de urna hackeada pra retardados',
+    'a velha lenga lenga da fraude nas urnas eletrônicas e do tal voto impresso já perdeu a validade']) {
+    const r = dis(t); assert.ok(r.score < 3, `${r.score} :: ${t}`);
+  }
+});
+
+test('2.1.1 citação entre aspas pesa 1/4, mas aspas irônicas numa só palavra não anulam a tese', () => {
+  const q = dis('"eleição fraudada" KAKAKAKAKAKAKAKA');
+  assert.ok(q.score < 3, String(q.score)); assert.ok(labels(q).some(l => /entre aspas/.test(l)));
+  assert.ok(dis('O mais decepcionante é ver as pessoas acreditando na "apuração" SECRETA das CAIXINHAS MÁGICAS').score >= 3);
+});
+
+test('2.1.1 negação e contexto fora do tema não disparam', () => {
+  assert.ok(!labels(dis('Nossa eleicao nao foi fraudada???? pq o nosso capitão fugiu')).includes('roubaram a eleição'));
+  assert.equal(dis('FINALMENTE consegui por minha casa no lote: Sala secreta acessada pelo armário!!').score, 0);
+  assert.ok(dis('Momento pede intervenção Federal em SP que lugar para criar político').score < 3);
+  assert.ok(dis('Eu votei no Bolsonaro e não creio que houve Fraude nas Urnas Eletrônicas').score < 3);
+});
+
+test('2.1.1 conta: sinal de inundação de respostas (mesmo texto repetido pela mesma conta)', () => {
+  const sig = n => S.scoreAccount({ handle: 'jeanmarlonn' }, { selfRepeats: n, now: NOW }).signals.find(s => /inundação de respostas/.test(s.label));
+  assert.equal(sig(2), undefined);
+  assert.equal(sig(3).weight, 2);
+  assert.equal(sig(29).weight, 3);
+  assert.match(sig(29).label, /29 vezes/);
+});
+
+test('2.1.1 tracker: selfRepeats conta respostas distintas da mesma conta com o mesmo texto', () => {
+  const t = S.createSessionTracker(); const txt = 'O Brasil pede socorro!! Ladrões comunistas roubaram a nossa eleição. Fraude eleitoral.';
+  let e;
+  ['@WhiteHouse', '@SpeakerJohnson', '@DHSgov'].forEach((m, i) => { e = t.add({ text: m + ' ' + txt, handle: 'jeanmarlonn', id: 'p' + i, time: 1000 + i }); });
+  assert.equal(t.state(e).selfRepeats, 3);
+  assert.equal(t.state(e).dupAuthors, 1);
+  e = t.add({ text: '@DHSgov ' + txt, handle: 'jeanmarlonn', id: 'p2', time: 2000 });   // mesmo post re-renderizado
+  assert.equal(t.state(e).selfRepeats, 3);
+  const quiet = S.scoreAccount({ handle: 'jeanmarlonn' }, { text: txt, now: NOW });
+  ['@POTUS', '@SecRubio'].forEach((m, i) => { e = t.add({ text: m + ' ' + txt, handle: 'jeanmarlonn', id: 'q' + i, time: 3000 + i }); });
+  const acc = S.scoreAccount({ handle: 'jeanmarlonn' }, Object.assign({ text: txt, now: NOW }, t.state(e)));
+  assert.equal(t.state(e).selfRepeats, 5);
+  assert.ok(acc.score >= quiet.score + 3);
+  assert.equal(S.classify(dis(txt), acc), 'red');
+});

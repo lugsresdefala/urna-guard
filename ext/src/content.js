@@ -169,7 +169,7 @@
     if (st) return st;
     const post = readTweet(article);
     if (!post.text && !post.quoted && !post.extra.length) return null;
-    const entry = tracker.add({ text: [post.text, post.extra.join(' ')].join(' '), handle: post.author.handle, links: post.links, time: Date.now() });
+    const entry = tracker.add({ text: [post.text, post.extra.join(' ')].join(' '), handle: post.author.handle, links: post.links, time: Date.now(), id: post.url || undefined });
     st = { post, entry };
     ingested.set(article, st);
     const h = lc(post.author.handle);
@@ -198,7 +198,7 @@
     const live = tracker.state(st.entry);
     const dis = S.scoreDisinformation({ text: post.text, quoted: post.quoted, extra: post.extra },
       { keywords: settings.keywords || S.DEFAULT_KEYWORDS, labelAdjust });
-    const acc = S.scoreAccount(post.author, { text: post.text, dupAuthors: live.dupAuthors, linkAuthors: live.linkAuthors, burst: live.burst,
+    const acc = S.scoreAccount(post.author, { text: post.text, dupAuthors: live.dupAuthors, linkAuthors: live.linkAuthors, burst: live.burst, selfRepeats: live.selfRepeats,
       blocklisted: blockSet.has(lc(post.author.handle)) });
     const level = S.classify(dis, acc, settings);
     const sig = level + '|' + dis.score + '|' + acc.score + '|' + dis.signals.length + '|' + acc.signals.length;
