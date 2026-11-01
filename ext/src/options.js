@@ -32,6 +32,7 @@ $('save').onclick = () => {
   const isDefault = JSON.stringify(kw) === JSON.stringify(S.DEFAULT_KEYWORDS);
   const s = { enabled: $('enabled').checked, keywords: isDefault ? null : kw, allowlist: parseList($('allowlist').value), blocklist: parseList($('blocklist').value) };
   NUMS.forEach(k => { const v = parseFloat($(k).value); s[k] = v >= 1 ? v : S.DEFAULT_SETTINGS[k]; });
+  s.sensitivity = S.sensitivityOf(s);
   chrome.storage.local.set({ settings: s }, () => { status('Salvo.'); load(); });
 };
 $('reset').onclick = () => chrome.storage.local.get(['settings'], r => {

@@ -59,7 +59,9 @@ section{padding:64px 0}h2{font-size:32px;line-height:1.2;margin:0 0 8px}.sub{col
 .mock{margin-top:10px;border:1px solid var(--line);border-radius:10px;background:#fafbfa;padding:10px 14px;font-size:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .toggle{width:42px;height:24px;border-radius:999px;background:#1a5fd0;position:relative;display:inline-block}.toggle::after{content:"";position:absolute;right:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff}
 .fakebtn{border:1px solid #1a5fd0;color:#1a5fd0;border-radius:6px;padding:3px 12px;font-weight:700;background:#fff}
-.badge{display:inline-block;border-radius:999px;padding:3px 12px;font-weight:800;font-size:15px}.b-y{background:var(--y);color:#3e2a00}.b-r{background:var(--r);color:#fff}
+.badge{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:3px 12px 3px 9px;font-weight:800;font-size:15px}.badge u{font-weight:500}.badge .dot{width:11px;height:11px;border-radius:50%}.b-y{background:#ffe08a;color:#3a2900}.b-y .dot{background:#b26a00}.b-r{background:#b3261e;color:#fff}.b-r .dot{background:#fff}
+.done{margin-top:12px!important;color:var(--ink)!important}
+@media(max-width:600px){body{font-size:17px}section{padding:44px 0}h2{font-size:26px}.btn{width:100%;font-size:18px;padding:14px 18px}.panel{padding:18px}.steps>li{grid-template-columns:36px 1fr;gap:10px}.steps>li::before{width:34px;height:34px;font-size:17px}.copy{display:flex;max-width:100%}.copy code{font-size:15px;overflow-wrap:anywhere;flex:1}.copy button{min-width:0}.tab{padding:10px 14px;flex:1}.hero{padding:40px 0}}
 .chips{display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none}.chips li{background:#e3f1e8;color:#063f20;border-radius:999px;padding:6px 14px;font-size:16px}
 .shots{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:start}@media(max-width:900px){.shots{grid-template-columns:1fr}}
 figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px}figcaption{font-size:16px;color:var(--mut);padding:8px 4px 2px}figure img{border-radius:10px}
@@ -82,7 +84,7 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
 </div></nav>
 <header class="hero"><div class="wrap">
   <div>
-    <span class="pill">Free · version 2.0.0 · 100% local</span>
+    <span class="pill">Free · version 2.1.1 · 100% local</span>
     <h1>Know when a post about Brazil's voting machines looks like disinformation.</h1>
     <p class="lead"><b>Urna Guard</b> adds an <b>alert badge</b> to posts on X (Twitter) that repeat already-debunked rumors about Brazil's electronic voting machine (<i lang="pt-BR">urna eletrônica</i>) and explains why. It <b>never hides or reports</b> anything.</p>
     <div class="cta-box" id="cta" aria-live="polite">
@@ -97,7 +99,7 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
 <main id="conteudo">
 <section id="instalar"><div class="wrap">
   <h2>How to install</h2>
-  <p class="sub">It takes about a minute. Follow the steps for your browser.</p>
+  <p class="sub">Just 3 steps, about a minute. Pick your browser:</p>
   <div class="notice" style="margin-bottom:26px" id="storeNotice"><b>Coming soon to the official stores.</b> Once Urna Guard is approved on the Chrome Web Store, Edge Add-ons and Firefox Add-ons, the <b>"Install in 1 click"</b> button will work and installation will be automatic, with updates. Until then, installation is manual: follow the steps below.</div>
   <div class="tabs" role="tablist" aria-label="Choose your browser">
     <button class="tab" role="tab" id="tab-chrome" aria-controls="panel" aria-selected="true" data-b="chrome">Google Chrome</button>
@@ -107,21 +109,20 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
   <div class="panel" id="panel" role="tabpanel" aria-labelledby="tab-chrome" tabindex="0">
     <ol class="steps">
       <li><div><h3>Download and unzip</h3><p id="s1"></p></div></li>
-      <li><div><h3>Open the extensions page</h3><p>For security, browsers don't let websites open this address from a link. Click <b>Copy</b>, paste it into the address bar and press Enter:</p>
-        <div class="copy"><code id="url">chrome://extensions</code><button type="button" id="copyBtn" aria-describedby="url">Copy</button></div><span class="sr" id="copyStatus" role="status"></span></div></li>
-      <li><div><h3 id="s3t"></h3><p id="s3"></p><div class="mock" aria-hidden="true" id="m3"></div></div></li>
-      <li><div><h3 id="s4t"></h3><p id="s4"></p><div class="mock" aria-hidden="true" id="m4"></div></div></li>
-      <li><div><h3>Done! Open X</h3><p id="s5"></p></div></li>
+      <li><div><h3 id="s2t"></h3><p>Copy the address below, paste it into the address bar and press Enter (websites cannot open this address from a link):</p>
+        <div class="copy"><code id="url">chrome://extensions</code><button type="button" id="copyBtn" aria-describedby="url">Copy</button></div><span class="sr" id="copyStatus" role="status"></span>
+        <p id="s3"></p><div class="mock" aria-hidden="true" id="m3"></div></div></li>
+      <li><div><h3 id="s4t"></h3><p id="s4"></p><div class="mock" aria-hidden="true" id="m4"></div><p class="done"><b>Done:</b> <span id="s5"></span></p></div></li>
     </ol>
-    <p style="margin-top:20px;color:var(--mut)">Note: the extension's on-screen labels are in Brazilian Portuguese. Its name and description appear in English in English-language browsers.</p>
+    <p style="margin-top:20px;color:var(--mut)">Note: the badge, popup and welcome screens follow your browser language (English or Brazilian Portuguese). The detailed signal names inside “Technical details” are in Portuguese.</p>
   </div>
 </div></section>
 <section id="como-funciona" class="white"><div class="wrap">
   <h2>How it works</h2>
   <p class="sub">The extension only reads what is already on your screen and computes two scores: one for disinformation and one for suspicious accounts.</p>
   <div class="grid3">
-    <div class="card"><h3><span class="badge b-y">⚠️ Attention</span></h3><p>The post contains a known, already-debunked narrative about the voting machines.</p></div>
-    <div class="card"><h3><span class="badge b-r">⛔ High risk</span></h3><p>A strong narrative posted by an account with several signs of being fake or acting in coordination.</p></div>
+    <div class="card"><h3><span class="badge b-y"><span class="dot"></span>Caution <u>why?</u></span></h3><p>The post contains a known, already-debunked narrative about the voting machines.</p></div>
+    <div class="card"><h3><span class="badge b-r"><span class="dot"></span>High risk <u>why?</u></span></h3><p>A strong narrative posted by an account with several signs of being fake or acting in coordination.</p></div>
     <div class="card"><h3>No badge</h3><p>Fact-checks, debunks, irony ("they say that…") and negations ("there was no fraud") lower the alert. No post is ever hidden.</p></div>
   </div>
   <div class="grid2" style="margin-top:22px">
@@ -134,7 +135,7 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
   <div class="shots">
     <figure><img src="../img/timeline.jpg" loading="lazy" alt="X timeline with yellow and red badges on suspicious posts; the fact-check and ordinary posts have no badge"><figcaption>Badges on suspicious posts. Fact-checks and ordinary posts get no badge.</figcaption></figure>
     <div style="display:grid;gap:20px">
-      <figure><img src="../img/popup.jpg" loading="lazy" alt="Extension popup with alert counters and a bar chart by category"><figcaption>Popup: on/off switch, counters and export.</figcaption></figure>
+      <figure><img src="../img/popup.jpg" loading="lazy" alt="Extension popup with the on switch, today's counters (caution and high risk) and a three-level sensitivity control: low, medium, high"><figcaption>Popup: on/off switch, today's counters and 3-level sensitivity.</figcaption></figure>
       <figure><img src="../img/opcoes.jpg" loading="lazy" alt="Settings page with sensitivity thresholds, trust list and watch list"><figcaption>Settings: sensitivity, lists and keywords.</figcaption></figure>
     </div>
   </div>
@@ -173,6 +174,8 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
 </div></section>
 <section id="faq"><div class="wrap">
   <h2>Frequently asked questions</h2>
+  <details><summary>What do the badge colors mean?</summary><p><b>Yellow (Caution):</b> the text repeats a common misinformation claim about the voting machines. <b>Red (High risk):</b> on top of that, the account shows signs of automation or coordinated activity. Posts without signals get no badge. Click <b>why?</b> on the badge for a plain-language explanation.</p></details>
+  <details><summary>How do I make it stricter or more relaxed?</summary><p>Click the Urna Guard icon in the browser toolbar and pick a sensitivity: <b>Low</b> (fewer alerts), <b>Medium</b> (recommended) or <b>High</b> (more alerts, more false positives). The on/off switch and today's counters are there too.</p></details>
   <details><summary>Is it safe to install outside the store?</summary><p>The extension only asks to store data locally and only runs on x.com and twitter.com. The code is open and readable. Even so, only install extensions from sources you trust, and prefer the official stores once it's listed there.</p></details>
   <details><summary>I see a warning about "developer mode" extensions. Is that normal?</summary><p>Yes. Chrome and Edge warn about manually installed extensions. You can dismiss it.</p></details>
   <details><summary>Does it work on phones?</summary><p>No. Mobile browsers don't accept this kind of extension. Use it on a computer (Windows, Mac or Linux).</p></details>
@@ -191,7 +194,7 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
 </div></section>
 </main>
 <footer><div class="wrap">
-  <p><b>Urna Guard 2.0.0</b>. An independent project, not affiliated with the TSE, Brazil's Electoral Justice or X. Automated hints, not proof.</p>
+  <p><b>Urna Guard 2.1.1</b>. An independent project, not affiliated with the TSE, Brazil's Electoral Justice or X. Automated hints, not proof.</p>
   <p><a href="privacidade.html">Privacy policy</a> · This website uses no cookies, trackers or external resources.</p>
 </div></footer>
 
@@ -200,21 +203,21 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
   'use strict';
   // >>> Quando publicar, cole aqui as URLs das lojas: o botão "Instalar com 1 clique" passa a ser o principal.
   var STORE = { chrome: '', edge: '', firefox: '' };
-  var V = '2.0.0';
+  var V = '2.1.1';
   var PKG = { chrome: '../downloads/urna-guard-chrome-' + V + '.zip', edge: '../downloads/urna-guard-chrome-' + V + '.zip', firefox: '../downloads/urna-guard-firefox-' + V + '.zip' };
   var NAMES = { chrome: 'Google Chrome', edge: 'Microsoft Edge', firefox: 'Firefox' };
   var B = {
-    chrome: { url: 'chrome://extensions',
+    chrome: { url: 'chrome://extensions', s2t: 'Open extensions and turn on "Developer mode"',
       s1: 'Click <a href="' + PKG.chrome + '" download>download the package</a>. Open your Downloads folder, right-click <code>urna-guard-chrome-' + V + '.zip</code> and choose <b>Extract All</b> (Windows) or double-click it (Mac). Keep the extracted folder somewhere permanent, such as Documents.',
       s3t: 'Turn on "Developer mode"', s3: 'In the top-right corner of the page, turn on the <b>Developer mode</b> switch.', m3: '<span>Developer mode</span><span class="toggle"></span>',
       s4t: 'Click "Load unpacked"', s4: 'Click <b>Load unpacked</b> and choose the extracted folder (the one that contains <code>manifest.json</code>).', m4: '<span class="fakebtn">Load unpacked</span>',
       s5: 'Click the puzzle icon 🧩, then the pin 📌 next to <b>Urna Guard</b>. Open <b>x.com</b>: badges appear next to the author\'s name.' },
-    edge: { url: 'edge://extensions',
+    edge: { url: 'edge://extensions', s2t: 'Open extensions and turn on "Developer mode"',
       s1: 'Click <a href="' + PKG.edge + '" download>download the package</a>. Open Downloads, right-click <code>urna-guard-chrome-' + V + '.zip</code> and choose <b>Extract All</b>. The same package works for Chrome and Edge. Keep the folder somewhere permanent.',
       s3t: 'Turn on "Developer mode"', s3: 'In the left sidebar of the page, turn on the <b>Developer mode</b> switch.', m3: '<span>Developer mode</span><span class="toggle"></span>',
       s4t: 'Click "Load unpacked"', s4: 'Click <b>Load unpacked</b> and choose the extracted folder (the one that contains <code>manifest.json</code>).', m4: '<span class="fakebtn">Load unpacked</span>',
       s5: 'Click the puzzle icon 🧩, then the eye 👁 to show <b>Urna Guard</b> in the toolbar. Open <b>x.com</b>: badges appear next to the author\'s name.' },
-    firefox: { url: 'about:debugging#/runtime/this-firefox',
+    firefox: { url: 'about:debugging#/runtime/this-firefox', s2t: 'Open Firefox\'s debugging page',
       s1: 'Click <a href="' + PKG.firefox + '" download>download the Firefox package</a>. No need to unzip.',
       s3t: 'Click "Load Temporary Add-on…"', s3: 'On the page that opens, click <b>Load Temporary Add-on…</b>', m3: '<span class="fakebtn">Load Temporary Add-on…</span>',
       s4t: 'Choose the downloaded file', s4: 'Select <code>urna-guard-firefox-' + V + '.zip</code>. <b>Note:</b> in Firefox this install is removed when the browser closes, until the signed version is on Mozilla\'s store.', m4: '<span>urna-guard-firefox-' + V + '.zip</span>',
@@ -235,7 +238,7 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
     tabs.forEach(function (t) { var on = t.dataset.b === b; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; if (on && focus) t.focus(); });
     $('panel').setAttribute('aria-labelledby', 'tab-' + b);
     $('url').textContent = d.url;
-    ['s1', 's3t', 's3', 'm3', 's4t', 's4', 's5'].forEach(function (k) { $(k).innerHTML = d[k]; });
+    ['s1', 's2t', 's3', 'm3', 's4t', 's4', 'm4', 's5'].forEach(function (k) { $(k).innerHTML = d[k]; });
   }
   tabs.forEach(function (t, i) {
     t.addEventListener('click', function () { select(t.dataset.b); });

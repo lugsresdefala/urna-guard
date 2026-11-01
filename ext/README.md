@@ -94,6 +94,20 @@ O teste funcional carrega a extensão desempacotada no Chromium (headless). Ele 
 - **LGPD:** tudo fica em `chrome.storage.local`, neste navegador, com limite de 1000 itens sinalizados e 500 feedbacks. Não há servidores, telemetria nem `connect-src`. Você pode apagar os dados a qualquer momento. As exportações JSON/CSV contêm dados pessoais (handles e textos), então guarde e compartilhe esses arquivos com responsabilidade e finalidade legítima.
 
 ## Changelog
+### 2.1.1
+- **Menos falsos positivos com ironia e citação:** novos contextos de deboche ("mi mi mi", "troca o disco", "narrativa de fraude", "faz pix") e de atribuição ("vão gritar fraude", "quer falar de fraude") reduzem o peso das narrativas (×0,4); palavra-chave que só aparece dentro de aspas pesa ¼ e é marcada "(entre aspas)"; negações novas ("não creio que houve fraude", "zero provas").
+- **Novas narrativas (casos reais):** "Ladrões comunistas roubaram a nossa eleição", "a eleição foi roubada/fraudada", "as urnas foram fraudadas", "STF fraudou as eleições", "fraude eleitoral", "presidente legítimo", "eleitores fantasmas", hashtags #SAVEBRAZIL e #FraudeEleitoral.
+- **Menos ruído de contexto:** "sala secreta" só conta perto de TSE/urna/eleição/apuração; "intervenção" só no sentido militar ou nacional (não "intervenção federal em SP").
+- **Sinal de inundação de respostas:** a mesma conta repetindo o mesmo texto em respostas distintas (3+ vezes: +2; 5+: +3).
+- Testes de unidade com casos reais da revisão manual de 2026.
+
+### 2.1.0
+- **Mais rápido:** varredura incremental (só nós novos), lotes em `requestIdleCallback` com fatias de no máx. ~12 ms, `WeakSet` de posts já pontuados, cache LRU de normalização, regexes pré-compiladas, comparações SimHash/Jaccard limitadas aos 300 grupos mais recentes (+ índice exato por chave), re-pontuação de copypastas só quando o nº de contas cruza um limiar, e o DOM do selo só é refeito quando o resultado muda. Bench: `npm run bench`.
+- **Selo mais claro:** cor de semáforo (amarelo/vermelho) com rótulo simples ("Atenção" / "Alto risco") e "por quê?". Um clique mostra os motivos principais em linguagem simples, o que fazer e links do TSE; detalhes técnicos ficam recolhidos.
+- **Popup simplificado:** interruptor liga/desliga, sensibilidade em 3 níveis (Baixa/Média/Alta) e contadores de hoje. Exportação e estatísticas em "Dados salvos".
+- **Boas-vindas em 3 passos** na primeira instalação (também em "Como funciona" no popup).
+- **Acessibilidade:** teclado (Enter abre, Esc fecha e devolve o foco), `aria-expanded`/`aria-controls`, contraste AA, axe sem violações; interface em pt-BR e inglês.
+
 ### 2.0.0
 - Normalização resistente a ofuscação: leetspeak, separadores, letras repetidas, zero-width e fuzzy Levenshtein ≤ 1.
 - De 17 para 49 narrativas, em 11 categorias.

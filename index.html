@@ -59,7 +59,9 @@ section{padding:64px 0}h2{font-size:32px;line-height:1.2;margin:0 0 8px}.sub{col
 .mock{margin-top:10px;border:1px solid var(--line);border-radius:10px;background:#fafbfa;padding:10px 14px;font-size:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .toggle{width:42px;height:24px;border-radius:999px;background:#1a5fd0;position:relative;display:inline-block}.toggle::after{content:"";position:absolute;right:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff}
 .fakebtn{border:1px solid #1a5fd0;color:#1a5fd0;border-radius:6px;padding:3px 12px;font-weight:700;background:#fff}
-.badge{display:inline-block;border-radius:999px;padding:3px 12px;font-weight:800;font-size:15px}.b-y{background:var(--y);color:#3e2a00}.b-r{background:var(--r);color:#fff}
+.badge{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:3px 12px 3px 9px;font-weight:800;font-size:15px}.badge u{font-weight:500}.badge .dot{width:11px;height:11px;border-radius:50%}.b-y{background:#ffe08a;color:#3a2900}.b-y .dot{background:#b26a00}.b-r{background:#b3261e;color:#fff}.b-r .dot{background:#fff}
+.done{margin-top:12px!important;color:var(--ink)!important}
+@media(max-width:600px){body{font-size:17px}section{padding:44px 0}h2{font-size:26px}.btn{width:100%;font-size:18px;padding:14px 18px}.panel{padding:18px}.steps>li{grid-template-columns:36px 1fr;gap:10px}.steps>li::before{width:34px;height:34px;font-size:17px}.copy{display:flex;max-width:100%}.copy code{font-size:15px;overflow-wrap:anywhere;flex:1}.copy button{min-width:0}.tab{padding:10px 14px;flex:1}.hero{padding:40px 0}}
 .chips{display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none}.chips li{background:#e3f1e8;color:#063f20;border-radius:999px;padding:6px 14px;font-size:16px}
 .shots{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:start}@media(max-width:900px){.shots{grid-template-columns:1fr}}
 figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px}figcaption{font-size:16px;color:var(--mut);padding:8px 4px 2px}figure img{border-radius:10px}
@@ -83,7 +85,7 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
 
 <header class="hero"><div class="wrap">
   <div>
-    <span class="pill">Gratuito · versão 2.0.0 · 100% local</span>
+    <span class="pill">Gratuito · versão 2.1.1 · 100% local</span>
     <h1>Saiba quando um post sobre as urnas tem cara de desinformação.</h1>
     <p class="lead">O <b>Urna Guard</b> coloca um <b>selo de alerta</b> em posts do X (Twitter) que repetem boatos já desmentidos sobre a urna eletrônica e explica os motivos. Ele <b>nunca oculta nem denuncia</b> nada.</p>
     <div class="cta-box" id="cta" aria-live="polite">
@@ -99,7 +101,7 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
 <main id="conteudo">
 <section id="instalar"><div class="wrap">
   <h2>Como instalar</h2>
-  <p class="sub" id="installSub">Leva cerca de 1 minuto. Siga os passos do seu navegador.</p>
+  <p class="sub" id="installSub">São só 3 passos, cerca de 1 minuto. Escolha seu navegador:</p>
   <div class="notice" style="margin-bottom:26px" id="storeNotice"><b>Em breve nas lojas oficiais.</b> Quando o Urna Guard for aprovado na Chrome Web Store, na loja de complementos do Edge e na do Firefox, o botão <b>"Instalar com 1 clique"</b> vai funcionar e a instalação será automática, com atualizações. Até lá, a instalação é manual: siga os passos abaixo.</div>
   <div class="tabs" role="tablist" aria-label="Escolha o navegador">
     <button class="tab" role="tab" id="tab-chrome" aria-controls="panel" aria-selected="true" data-b="chrome">Google Chrome</button>
@@ -109,11 +111,10 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
   <div class="panel" id="panel" role="tabpanel" aria-labelledby="tab-chrome" tabindex="0">
     <ol class="steps">
       <li><div><h3>Baixe e descompacte</h3><p id="s1"></p></div></li>
-      <li><div><h3>Abra a página de extensões</h3><p>Por segurança, os navegadores não deixam sites abrirem este endereço por link. Clique em <b>Copiar</b>, cole o endereço na barra do navegador e aperte Enter:</p>
-        <div class="copy"><code id="url">chrome://extensions</code><button type="button" id="copyBtn" aria-describedby="url">Copiar</button></div><span class="sr" id="copyStatus" role="status"></span></div></li>
-      <li><div><h3 id="s3t"></h3><p id="s3"></p><div class="mock" aria-hidden="true" id="m3"></div></div></li>
-      <li><div><h3 id="s4t"></h3><p id="s4"></p><div class="mock" aria-hidden="true" id="m4"></div></div></li>
-      <li><div><h3>Pronto! Abra o X</h3><p id="s5"></p></div></li>
+      <li><div><h3 id="s2t"></h3><p>Copie o endereço abaixo, cole na barra do navegador e aperte Enter (sites não podem abrir este endereço por link):</p>
+        <div class="copy"><code id="url">chrome://extensions</code><button type="button" id="copyBtn" aria-describedby="url">Copiar</button></div><span class="sr" id="copyStatus" role="status"></span>
+        <p id="s3"></p><div class="mock" aria-hidden="true" id="m3"></div></div></li>
+      <li><div><h3 id="s4t"></h3><p id="s4"></p><div class="mock" aria-hidden="true" id="m4"></div><p class="done"><b>Pronto:</b> <span id="s5"></span></p></div></li>
     </ol>
   </div>
 </div></section>
@@ -122,8 +123,8 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
   <h2>Como funciona</h2>
   <p class="sub">A extensão lê só o que já aparece na sua tela e calcula dois scores: um de desinformação e um de conta suspeita.</p>
   <div class="grid3">
-    <div class="card"><h3><span class="badge b-y">⚠️ Atenção</span></h3><p>O post contém uma narrativa conhecida e já desmentida sobre as urnas.</p></div>
-    <div class="card"><h3><span class="badge b-r">⛔ Alto risco</span></h3><p>Narrativa forte publicada por uma conta com vários sinais de ser falsa ou de agir em grupo.</p></div>
+    <div class="card"><h3><span class="badge b-y"><span class="dot"></span>Atenção <u>por quê?</u></span></h3><p>O post contém uma narrativa conhecida e já desmentida sobre as urnas.</p></div>
+    <div class="card"><h3><span class="badge b-r"><span class="dot"></span>Alto risco <u>por quê?</u></span></h3><p>Narrativa forte publicada por uma conta com vários sinais de ser falsa ou de agir em grupo.</p></div>
     <div class="card"><h3>Sem selo</h3><p>Checagens, desmentidos, ironia ("dizem que…") e negações ("não houve fraude") reduzem o alerta. Nenhum post é ocultado.</p></div>
   </div>
   <div class="grid2" style="margin-top:22px">
@@ -136,7 +137,7 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
   <div class="shots">
     <figure><img src="img/timeline.jpg" loading="lazy" alt="Linha do tempo do X com selos amarelos e vermelhos em posts suspeitos; a checagem da Agência Lupa e os posts comuns aparecem sem selo"><figcaption>Selos nos posts suspeitos. Checagens e posts comuns ficam sem selo.</figcaption></figure>
     <div style="display:grid;gap:20px">
-      <figure><img src="img/popup.jpg" loading="lazy" alt="Janela da extensão com contadores de alertas e gráfico de barras por categoria"><figcaption>Janela da extensão: liga/desliga, contadores e exportação.</figcaption></figure>
+      <figure><img src="img/popup.jpg" loading="lazy" alt="Janela da extensão com interruptor ligado, contadores de hoje (atenção e alto risco) e sensibilidade em três níveis: baixa, média e alta"><figcaption>Janela da extensão: liga/desliga, contadores de hoje e sensibilidade em 3 níveis.</figcaption></figure>
       <figure><img src="img/opcoes.jpg" loading="lazy" alt="Página de configurações com limiares de sensibilidade, listas de confiança e de observação"><figcaption>Configurações: sensibilidade, listas e palavras-chave.</figcaption></figure>
     </div>
   </div>
@@ -177,6 +178,8 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
 
 <section id="faq"><div class="wrap">
   <h2>Dúvidas frequentes</h2>
+  <details><summary>O que significam as cores do selo?</summary><p><b>Amarelo (Atenção):</b> o texto repete uma afirmação comum de desinformação sobre as urnas. <b>Vermelho (Alto risco):</b> além disso, a conta tem sinais de automação ou de ação em grupo. Posts sem sinais ficam sem selo. Clique em <b>por quê?</b> no selo para ver os motivos em linguagem simples.</p></details>
+  <details><summary>Como deixo a extensão mais ou menos rigorosa?</summary><p>Clique no ícone do Urna Guard na barra do navegador e escolha a sensibilidade: <b>Baixa</b> (menos alertas), <b>Média</b> (recomendada) ou <b>Alta</b> (mais alertas, mais falsos positivos). No mesmo lugar há o interruptor para ligar e desligar e os contadores do dia.</p></details>
   <details><summary>É seguro instalar fora da loja?</summary><p>A extensão só pede para guardar dados localmente e só funciona em x.com e twitter.com. O código é aberto e legível. Mesmo assim, instale extensões apenas de fontes em que você confia. Quando ela estiver nas lojas oficiais, prefira instalar por lá.</p></details>
   <details><summary>Apareceu um aviso sobre "modo do desenvolvedor". É normal?</summary><p>Sim. Chrome e Edge avisam sobre extensões instaladas manualmente. Pode fechar o aviso.</p></details>
   <details><summary>Funciona no celular?</summary><p>Não. Os navegadores de celular não aceitam esse tipo de extensão. Use no computador (Windows, Mac ou Linux).</p></details>
@@ -197,7 +200,7 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
 </main>
 
 <footer><div class="wrap">
-  <p><b>Urna Guard 2.0.0</b>. Projeto independente, sem vínculo com o TSE, a Justiça Eleitoral ou o X. Pistas automáticas, não provas.</p>
+  <p><b>Urna Guard 2.1.1</b>. Projeto independente, sem vínculo com o TSE, a Justiça Eleitoral ou o X. Pistas automáticas, não provas.</p>
   <p><a href="privacidade.html">Política de privacidade</a> · Este site não usa cookies, rastreadores nem recursos externos.</p>
 </div></footer>
 
@@ -206,21 +209,21 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
   'use strict';
   // >>> Quando publicar, cole aqui as URLs das lojas: o botão "Instalar com 1 clique" passa a ser o principal.
   var STORE = { chrome: '', edge: '', firefox: '' };
-  var V = '2.0.0';
+  var V = '2.1.1';
   var PKG = { chrome: 'downloads/urna-guard-chrome-' + V + '.zip', edge: 'downloads/urna-guard-chrome-' + V + '.zip', firefox: 'downloads/urna-guard-firefox-' + V + '.zip' };
   var NAMES = { chrome: 'Google Chrome', edge: 'Microsoft Edge', firefox: 'Firefox' };
   var B = {
-    chrome: { url: 'chrome://extensions',
+    chrome: { url: 'chrome://extensions', s2t: 'Abra as extensões e ligue o "Modo do desenvolvedor"',
       s1: 'Clique em <a href="' + PKG.chrome + '" download>baixar o pacote</a>. Abra a pasta Downloads, clique com o botão direito em <code>urna-guard-chrome-' + V + '.zip</code> e escolha <b>Extrair tudo</b> (no Windows) ou dê dois cliques nele (no Mac). Guarde a pasta extraída num lugar fixo, como Documentos.',
       s3t: 'Ligue o "Modo do desenvolvedor"', s3: 'No canto superior direito da página, ative a chave <b>Modo do desenvolvedor</b>.', m3: '<span>Modo do desenvolvedor</span><span class="toggle"></span>',
       s4t: 'Clique em "Carregar sem compactação"', s4: 'Clique no botão <b>Carregar sem compactação</b> e escolha a pasta extraída, aquela que contém o arquivo <code>manifest.json</code>.', m4: '<span class="fakebtn">Carregar sem compactação</span>',
       s5: 'Clique no ícone de quebra-cabeça 🧩 e depois no alfinete 📌 ao lado de <b>Urna Guard</b>. Abra <b>x.com</b>: os selos aparecem ao lado do nome de quem postou.' },
-    edge: { url: 'edge://extensions',
+    edge: { url: 'edge://extensions', s2t: 'Abra as extensões e ligue o "Modo de desenvolvedor"',
       s1: 'Clique em <a href="' + PKG.edge + '" download>baixar o pacote</a>. Abra a pasta Downloads, clique com o botão direito em <code>urna-guard-chrome-' + V + '.zip</code> e escolha <b>Extrair tudo</b>. O mesmo pacote serve para Chrome e Edge. Guarde a pasta extraída num lugar fixo.',
       s3t: 'Ligue o "Modo de desenvolvedor"', s3: 'Na barra lateral esquerda da página, ative a chave <b>Modo de desenvolvedor</b>.', m3: '<span>Modo de desenvolvedor</span><span class="toggle"></span>',
       s4t: 'Clique em "Carregar sem pacote"', s4: 'Clique em <b>Carregar sem pacote</b> e escolha a pasta extraída, aquela que contém o arquivo <code>manifest.json</code>.', m4: '<span class="fakebtn">Carregar sem pacote</span>',
       s5: 'Clique no ícone de quebra-cabeça 🧩 e depois no olho 👁 para mostrar o <b>Urna Guard</b> na barra. Abra <b>x.com</b>: os selos aparecem ao lado do nome de quem postou.' },
-    firefox: { url: 'about:debugging#/runtime/this-firefox',
+    firefox: { url: 'about:debugging#/runtime/this-firefox', s2t: 'Abra a página de depuração do Firefox',
       s1: 'Clique em <a href="' + PKG.firefox + '" download>baixar o pacote para Firefox</a>. Não precisa descompactar.',
       s3t: 'Clique em "Carregar extensão temporária…"', s3: 'Na página que abrir, clique no botão <b>Carregar extensão temporária…</b>', m3: '<span class="fakebtn">Carregar extensão temporária…</span>',
       s4t: 'Escolha o arquivo baixado', s4: 'Selecione o arquivo <code>urna-guard-firefox-' + V + '.zip</code>. <b>Atenção:</b> no Firefox essa instalação some quando o navegador é fechado, até a versão assinada sair na loja da Mozilla.', m4: '<span>urna-guard-firefox-' + V + '.zip</span>',
@@ -241,7 +244,7 @@ footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{c
     tabs.forEach(function (t) { var on = t.dataset.b === b; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; if (on && focus) t.focus(); });
     $('panel').setAttribute('aria-labelledby', 'tab-' + b);
     $('url').textContent = d.url;
-    ['s1', 's3t', 's3', 'm3', 's4t', 's4', 's5'].forEach(function (k) { $(k).innerHTML = d[k]; });
+    ['s1', 's2t', 's3', 'm3', 's4t', 's4', 'm4', 's5'].forEach(function (k) { $(k).innerHTML = d[k]; });
   }
   tabs.forEach(function (t, i) {
     t.addEventListener('click', function () { select(t.dataset.b); });
