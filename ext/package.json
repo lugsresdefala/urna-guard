@@ -1,0 +1,2 @@
+{ "name": "urna-guard", "version": "2.0.0", "private": true,
+  "scripts": { "test": "node --test tests/", "e2e": "node e2e/run.js" } }

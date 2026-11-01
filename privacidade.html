@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Política de privacidade – Urna Guard</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<link rel="alternate" hreflang="pt-BR" href="privacidade.html">
+<link rel="alternate" hreflang="en" href="en/privacidade.html">
+<link rel="alternate" hreflang="x-default" href="privacidade.html">
+<link rel="icon" href="img/icon.png">
+<style>body{margin:0;font:18px/1.7 system-ui,-apple-system,"Segoe UI",sans-serif;color:#14201a;background:#f5f7f5}main{max-width:780px;margin:auto;padding:32px 22px 60px;background:#fff;min-height:100vh}
+h1{font-size:32px;line-height:1.2}h2{font-size:22px;margin-top:32px;color:#004d26}a{color:#0a55a8}:focus-visible{outline:3px solid #0a55a8;outline-offset:3px}
+.top{display:flex;align-items:center;gap:10px;font-weight:800}table{border-collapse:collapse;width:100%;font-size:16px}td,th{border:1px solid #d5ddd8;padding:8px;text-align:left;vertical-align:top}.lang{float:right;display:inline-flex;border:2px solid #d5ddd8;border-radius:10px;overflow:hidden}.lang a{padding:4px 10px;font-weight:700;text-decoration:none;color:#14201a;font-size:15px}.lang a[aria-current=true]{background:#006b35;color:#fff}</style></head>
+<body><main>
+<div class="lang" role="group" aria-label="Idioma / Language"><a href="privacidade.html" hreflang="pt-BR" lang="pt-BR" aria-current="true">PT</a><a href="en/privacidade.html" hreflang="en" lang="en" aria-current="false" aria-label="English">EN</a></div>
+<p class="top"><img src="img/icon.png" alt="" width="32" height="32"> <a href="index.html">Urna Guard</a></p>
+<h1>Política de privacidade</h1>
+<p><b>Extensão:</b> Urna Guard (Chrome, Edge e Firefox), versão 2.0.0. <b>Vigência:</b> 1º de novembro de 2026.</p>
+
+<h2>Resumo</h2>
+<p>O Urna Guard <b>não coleta, não transmite, não vende e não compartilha</b> dados pessoais. Todo o processamento acontece no seu navegador. A extensão não faz nenhuma conexão de rede.</p>
+
+<h2>Quais dados são processados e onde</h2>
+<table>
+<tr><th>Dado</th><th>Finalidade</th><th>Onde fica</th></tr>
+<tr><td>Texto, nome de usuário, nome exibido e foto (padrão ou não) dos posts <i>já exibidos na sua tela</i> no x.com/twitter.com</td><td>Calcular o alerta e mostrar o selo</td><td>Memória da aba (descartado ao fechar)</td></tr>
+<tr><td>Posts sinalizados (nome de usuário, trecho do texto, link, sinais e data)</td><td>Contador, estatísticas e exportação feita por você</td><td><code>storage.local</code> do navegador, com limite de 1000 itens</td></tr>
+<tr><td>Configurações, listas de confiança e de observação, feedback "não é desinformação"</td><td>Personalizar os alertas</td><td><code>storage.local</code> do navegador</td></tr>
+</table>
+
+<h2>O que a extensão não faz</h2>
+<ul><li>Não envia nenhum dado a servidores, nem do desenvolvedor nem de terceiros. Não tem telemetria, análises de uso nem anúncios.</li>
+<li>Não usa cookies, senhas, tokens nem APIs privadas do X.</li>
+<li>Não oculta, não denuncia e não executa nenhuma ação na sua conta.</li>
+<li>Não carrega código remoto.</li></ul>
+
+<h2>Permissões</h2>
+<ul><li><b>storage:</b> guardar localmente as configurações e os itens sinalizados.</li>
+<li><b>Acesso a x.com e twitter.com:</b> ler os posts exibidos para mostrar os selos. A extensão não funciona em nenhum outro site.</li></ul>
+
+<h2>Seus direitos (LGPD, Lei 13.709/2018)</h2>
+<p>Como os dados ficam apenas no seu dispositivo, você tem controle total sobre eles:</p>
+<ul><li><b>Acesso e portabilidade:</b> "Exportar JSON/CSV" na janela da extensão.</li>
+<li><b>Eliminação:</b> "Limpar dados" na janela ou nas configurações. Ao remover a extensão, o navegador apaga todos os dados dela.</li>
+<li><b>Correção:</b> as listas e as configurações podem ser editadas a qualquer momento.</li></ul>
+<p>Os arquivos exportados contêm dados pessoais de terceiros (nomes de usuário e textos públicos). Se você compartilhar esses arquivos, a responsabilidade é sua: use-os só para fins legítimos, como pesquisa ou checagem, e nunca para assédio.</p>
+
+<h2>Este site</h2>
+<p>Este site não usa cookies, rastreadores, fontes nem scripts externos.</p>
+
+<h2>Alterações e contato</h2>
+<p>Qualquer mudança nesta política será publicada nesta página, com nova data de vigência. Contato: <a id="contato" href="mailto:tiagoog@lugaresdefala.com">tiagoog@lugaresdefala.com</a>.</p>
+<p><a href="index.html">← Voltar</a></p>
+</main><script>
+(function(){try{var k='ug-lang',cur=document.documentElement.lang.slice(0,2);
+document.querySelectorAll('.lang a').forEach(function(a){a.addEventListener('click',function(){localStorage.setItem(k,a.getAttribute('hreflang').slice(0,2));});});
+var pref=localStorage.getItem(k);
+if(!pref&&cur==='pt'&&!/^pt/i.test(navigator.language||'pt')){location.replace('en/privacidade.html');}
+else if(pref&&pref!==cur){location.replace(pref==='en'?'en/privacidade.html':'privacidade.html');}
+}catch(e){}})();
+</script>
+</body></html>

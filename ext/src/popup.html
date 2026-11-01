@@ -1,0 +1,15 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Urna Guard</title><link rel="stylesheet" href="ui.css"></head>
+<body class="popup">
+<header><img src="../icons/icon48.png" alt="" width="28" height="28"><h1>Urna Guard</h1>
+<label class="switch"><input type="checkbox" id="enabled"><span>Ativado</span></label></header>
+<div class="cards">
+  <div class="card y"><b id="yellow">0</b><span>atenção</span></div>
+  <div class="card r"><b id="red">0</b><span>alto risco</span></div>
+  <div class="card"><b id="total">0</b><span>salvos</span></div>
+</div>
+<h2>Por categoria</h2>
+<div id="stats" class="stats"></div>
+<div class="btns"><button id="exportJson">Exportar JSON</button><button id="exportCsv">Exportar CSV</button><button id="clear" class="danger">Limpar</button></div>
+<p><a href="options.html" target="_blank" id="opts">Configurações, listas e palavras-chave →</a></p>
+<p class="disc">Heurísticas, não são prova. Podem gerar falsos positivos. Não use para assediar ninguém. A extensão nunca oculta nem denuncia posts. Dados só neste navegador (chrome.storage.local).</p>
+<script src="scoring.js"></script><script src="export.js"></script><script src="popup.js"></script></body></html>

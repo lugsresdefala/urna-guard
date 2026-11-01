@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Urna Guard: alerts for voting-machine disinformation on X</title>
+<meta name="description" content="Free extension for Chrome, Edge and Firefox that flags, without hiding, posts on X with signs of disinformation about Brazil's electronic voting machine. 100% local.">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'">
+<link rel="alternate" hreflang="pt-BR" href="../">
+<link rel="alternate" hreflang="en" href="./">
+<link rel="alternate" hreflang="x-default" href="../">
+<link rel="icon" href="../img/icon.png">
+<style>
+:root{--g:#006b35;--gd:#004d26;--y:#ffd54f;--r:#c62828;--ink:#14201a;--mut:#46554c;--bg:#f5f7f5;--line:#d5ddd8}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{margin:0;font:18px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+a{color:#0a55a8;text-underline-offset:3px}img{max-width:100%;height:auto;display:block}
+:focus-visible{outline:3px solid #0a55a8;outline-offset:3px;border-radius:6px}
+.skip{position:absolute;left:-999px;top:8px;background:#fff;color:#000;padding:10px 16px;z-index:100;border-radius:8px}.skip:focus{left:8px}
+.wrap{max-width:1100px;margin:auto;padding:0 22px}
+nav{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:18px;min-height:62px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--ink);text-decoration:none;font-size:20px}.brand img{width:32px}
+nav ul{margin:0 0 0 auto;padding:0;list-style:none;display:flex;gap:18px;font-size:16px}nav ul a{color:var(--ink);text-decoration:none;padding:6px 2px}nav ul a:hover{color:var(--g);text-decoration:underline}
+@media(max-width:820px){nav ul{display:none}}
+.hero{background:linear-gradient(135deg,#00401f 0%,#006b35 60%,#007a3d 100%);color:#fff;padding:64px 0}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center}@media(max-width:900px){.hero .wrap{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(32px,5vw,50px);line-height:1.12;margin:0 0 16px}
+.lead{font-size:20px;margin:0 0 26px}
+.pill{display:inline-block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.4);padding:4px 14px;border-radius:999px;font-size:15px;margin-bottom:14px}
+.cta-box{background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.25);border-radius:18px;padding:22px}
+.detected{font-size:16px;margin:0 0 12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:14px 28px;border-radius:14px;font-weight:800;text-decoration:none;font-size:20px;border:2px solid transparent;cursor:pointer;font-family:inherit}
+.btn-primary{background:var(--y);color:#241a00;box-shadow:0 6px 18px rgba(0,0,0,.3)}.btn-primary:hover{background:#ffe282}
+.btn-store{background:#fff;color:var(--gd)}
+.btn[aria-disabled=true]{background:transparent;color:#fff;border:2px dashed rgba(255,255,255,.6);box-shadow:none;cursor:not-allowed;font-size:17px;min-height:48px}
+.cta-note{font-size:15px;margin:12px 0 0;opacity:.95}
+.alt-links{font-size:15px;margin-top:12px}.alt-links a{color:#fff}
+.hero-shot{border-radius:16px;box-shadow:0 22px 50px rgba(0,0,0,.4);background:#fff;padding:6px}
+section{padding:64px 0}h2{font-size:32px;line-height:1.2;margin:0 0 8px}.sub{color:var(--mut);margin:0 0 28px;font-size:19px}
+.white{background:#fff}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}@media(max-width:900px){.grid3,.grid2{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px}.card h3{margin:0 0 8px;font-size:20px}.card p{margin:0;color:var(--mut)}
+.notice{background:#fff7dc;border:1px solid #f0d27a;border-left:6px solid #b07800;border-radius:12px;padding:18px 20px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{padding:12px 22px;border:1px solid var(--line);border-bottom:0;border-radius:12px 12px 0 0;background:#e8eeea;cursor:pointer;font:inherit;font-weight:700;color:var(--mut);min-height:48px}
+.tab[aria-selected=true]{background:#fff;color:var(--gd);box-shadow:inset 0 3px 0 var(--g)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:0 16px 16px 16px;padding:28px}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:22px;counter-reset:s}
+.steps>li{display:grid;grid-template-columns:48px 1fr;gap:16px;counter-increment:s}
+.steps>li::before{content:counter(s);width:44px;height:44px;border-radius:50%;background:var(--g);color:#fff;font-weight:800;display:grid;place-items:center;font-size:20px}
+.steps h3{margin:6px 0 4px;font-size:20px}.steps p{margin:0;color:var(--mut)}
+.copy{display:inline-flex;margin-top:10px;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:#f1f5f2}
+.copy code{padding:10px 14px;font:18px ui-monospace,Menlo,monospace;color:var(--ink)}
+.copy button{border:0;border-left:2px solid var(--line);background:#fff;padding:10px 18px;cursor:pointer;font:inherit;font-weight:700;color:var(--gd);min-width:120px}
+.copy button.ok{background:var(--g);color:#fff}
+.mock{margin-top:10px;border:1px solid var(--line);border-radius:10px;background:#fafbfa;padding:10px 14px;font-size:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.toggle{width:42px;height:24px;border-radius:999px;background:#1a5fd0;position:relative;display:inline-block}.toggle::after{content:"";position:absolute;right:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff}
+.fakebtn{border:1px solid #1a5fd0;color:#1a5fd0;border-radius:6px;padding:3px 12px;font-weight:700;background:#fff}
+.badge{display:inline-block;border-radius:999px;padding:3px 12px;font-weight:800;font-size:15px}.b-y{background:var(--y);color:#3e2a00}.b-r{background:var(--r);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none}.chips li{background:#e3f1e8;color:#063f20;border-radius:999px;padding:6px 14px;font-size:16px}
+.shots{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:start}@media(max-width:900px){.shots{grid-template-columns:1fr}}
+figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px}figcaption{font-size:16px;color:var(--mut);padding:8px 4px 2px}figure img{border-radius:10px}
+details{background:#fff;border:1px solid var(--line);border-radius:12px;padding:0;margin-bottom:10px}
+summary{cursor:pointer;font-weight:700;padding:16px 20px;min-height:48px}details p{color:var(--mut);margin:0;padding:0 20px 16px}
+ul.check{padding-left:0;list-style:none}ul.check li{padding-left:30px;position:relative;margin:10px 0}
+ul.check li::before{content:"✓";position:absolute;left:0;color:var(--g);font-weight:900}ul.warn li::before{content:"!";color:#8a5a00}
+footer{background:#0d1f15;color:#dfe8e2;padding:36px 0;font-size:16px}footer a{color:#a8e6bf}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.lang{margin-left:12px;display:inline-flex;border:2px solid var(--line);border-radius:10px;overflow:hidden}.lang a{padding:6px 12px;font-weight:700;text-decoration:none;color:var(--ink);font-size:15px}.lang a[aria-current=true]{background:var(--g);color:#fff}
+@media(max-width:820px){.lang{margin-left:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#conteudo">Skip to content</a>
+<nav aria-label="Main navigation"><div class="wrap">
+  <a class="brand" href="./"><img src="../img/icon.png" alt="">Urna Guard</a>
+  <ul><li><a href="#instalar">Install</a></li><li><a href="#como-funciona">How it works</a></li><li><a href="#privacidade">Privacy</a></li><li><a href="#limitacoes">Limitations</a></li><li><a href="#faq">FAQ</a></li></ul>
+  <div class="lang" role="group" aria-label="Language / Idioma"><a href="../" hreflang="pt-BR" lang="pt-BR" aria-current="false" aria-label="Português (Brasil)">PT</a><a href="./" hreflang="en" lang="en" aria-current="true">EN</a></div>
+</div></nav>
+<header class="hero"><div class="wrap">
+  <div>
+    <span class="pill">Free · version 2.0.0 · 100% local</span>
+    <h1>Know when a post about Brazil's voting machines looks like disinformation.</h1>
+    <p class="lead"><b>Urna Guard</b> adds an <b>alert badge</b> to posts on X (Twitter) that repeat already-debunked rumors about Brazil's electronic voting machine (<i lang="pt-BR">urna eletrônica</i>) and explains why. It <b>never hides or reports</b> anything.</p>
+    <div class="cta-box" id="cta" aria-live="polite">
+      <p class="detected" id="detected">Detecting your browser…</p>
+      <a class="btn btn-primary" id="primary" href="#instalar">⬇ Download extension</a>
+      <p class="cta-note" id="ctaNote"></p>
+      <p class="alt-links" id="altLinks"></p>
+    </div>
+  </div>
+  <img class="hero-shot" src="../img/painel-alto-risco.jpg" width="600" height="506" alt="Example: a post with the red 'high risk' badge and the details panel open, listing the detected signals and TSE links (interface in Portuguese)">
+</div></header>
+<main id="conteudo">
+<section id="instalar"><div class="wrap">
+  <h2>How to install</h2>
+  <p class="sub">It takes about a minute. Follow the steps for your browser.</p>
+  <div class="notice" style="margin-bottom:26px" id="storeNotice"><b>Coming soon to the official stores.</b> Once Urna Guard is approved on the Chrome Web Store, Edge Add-ons and Firefox Add-ons, the <b>"Install in 1 click"</b> button will work and installation will be automatic, with updates. Until then, installation is manual: follow the steps below.</div>
+  <div class="tabs" role="tablist" aria-label="Choose your browser">
+    <button class="tab" role="tab" id="tab-chrome" aria-controls="panel" aria-selected="true" data-b="chrome">Google Chrome</button>
+    <button class="tab" role="tab" id="tab-edge" aria-controls="panel" aria-selected="false" tabindex="-1" data-b="edge">Microsoft Edge</button>
+    <button class="tab" role="tab" id="tab-firefox" aria-controls="panel" aria-selected="false" tabindex="-1" data-b="firefox">Firefox</button>
+  </div>
+  <div class="panel" id="panel" role="tabpanel" aria-labelledby="tab-chrome" tabindex="0">
+    <ol class="steps">
+      <li><div><h3>Download and unzip</h3><p id="s1"></p></div></li>
+      <li><div><h3>Open the extensions page</h3><p>For security, browsers don't let websites open this address from a link. Click <b>Copy</b>, paste it into the address bar and press Enter:</p>
+        <div class="copy"><code id="url">chrome://extensions</code><button type="button" id="copyBtn" aria-describedby="url">Copy</button></div><span class="sr" id="copyStatus" role="status"></span></div></li>
+      <li><div><h3 id="s3t"></h3><p id="s3"></p><div class="mock" aria-hidden="true" id="m3"></div></div></li>
+      <li><div><h3 id="s4t"></h3><p id="s4"></p><div class="mock" aria-hidden="true" id="m4"></div></div></li>
+      <li><div><h3>Done! Open X</h3><p id="s5"></p></div></li>
+    </ol>
+    <p style="margin-top:20px;color:var(--mut)">Note: the extension's on-screen labels are in Brazilian Portuguese. Its name and description appear in English in English-language browsers.</p>
+  </div>
+</div></section>
+<section id="como-funciona" class="white"><div class="wrap">
+  <h2>How it works</h2>
+  <p class="sub">The extension only reads what is already on your screen and computes two scores: one for disinformation and one for suspicious accounts.</p>
+  <div class="grid3">
+    <div class="card"><h3><span class="badge b-y">⚠️ Attention</span></h3><p>The post contains a known, already-debunked narrative about the voting machines.</p></div>
+    <div class="card"><h3><span class="badge b-r">⛔ High risk</span></h3><p>A strong narrative posted by an account with several signs of being fake or acting in coordination.</p></div>
+    <div class="card"><h3>No badge</h3><p>Fact-checks, debunks, irony ("they say that…") and negations ("there was no fraud") lower the alert. No post is ever hidden.</p></div>
+  </div>
+  <div class="grid2" style="margin-top:22px">
+    <div class="card"><h3>📝 Text signals</h3><p>It covers 49 weighted narratives in Portuguese. The text is cleaned of tricks such as <code>fr4ud3</code>, <code>f.r.a.u.d.e</code>, <code>fraaaude</code>, invisible characters and typos. Quoted posts, link cards and image descriptions are also read.</p></div>
+    <div class="card"><h3>👤 Account signals</h3><p>Usernames full of digits, a default photo, a generic or emoji-heavy name, a "backup account" bio, a new account, <b>near-identical text across many accounts</b>, <b>the same link repeated</b> and bursts of posts.</p></div>
+  </div>
+  <h3 style="margin-top:30px;font-size:22px">Rumor categories detected</h3>
+  <ul class="chips"><li>Election fraud</li><li>Source code / software</li><li>Printed ballot / auditing</li><li>Military intervention / coup</li><li>Attacks on the TSE/STF</li><li>Pre-loaded machines</li><li>Vote counting / tallying</li><li>Hackers / intrusion</li><li>Venezuela / Smartmatic</li><li>Phantom voters</li><li>Campaign hashtags</li></ul>
+  <h3 style="margin-top:34px;font-size:22px">See it in action</h3>
+  <div class="shots">
+    <figure><img src="../img/timeline.jpg" loading="lazy" alt="X timeline with yellow and red badges on suspicious posts; the fact-check and ordinary posts have no badge"><figcaption>Badges on suspicious posts. Fact-checks and ordinary posts get no badge.</figcaption></figure>
+    <div style="display:grid;gap:20px">
+      <figure><img src="../img/popup.jpg" loading="lazy" alt="Extension popup with alert counters and a bar chart by category"><figcaption>Popup: on/off switch, counters and export.</figcaption></figure>
+      <figure><img src="../img/opcoes.jpg" loading="lazy" alt="Settings page with sensitivity thresholds, trust list and watch list"><figcaption>Settings: sensitivity, lists and keywords.</figcaption></figure>
+    </div>
+  </div>
+  <p style="margin-top:20px">Got it wrong? Click <b>"Não é desinformação"</b> ("not disinformation") in the panel. The extension learns from it and trusts that author from then on, all on your computer.</p>
+</div></section>
+<section id="privacidade"><div class="wrap">
+  <h2>Privacy and LGPD</h2>
+  <p class="sub">Nothing leaves your browser. <a href="privacidade.html">Read the full privacy policy</a>.</p>
+  <div class="grid2">
+    <ul class="check">
+      <li><b>100% local:</b> settings and alerts stay in your browser's storage only.</li>
+      <li><b>No network:</b> nothing is sent to servers. No telemetry, no trackers.</li>
+      <li><b>No passwords or tokens:</b> the extension only reads the page you are already viewing.</li>
+      <li><b>You are in control:</b> delete everything in one click.</li>
+    </ul>
+    <ul class="check">
+      <li>It <b>never hides</b> posts and <b>never reports</b> anyone.</li>
+      <li><b>It does nothing on X by itself:</b> no liking, replying, blocking or following.</li>
+      <li>Exports contain usernames and post text, which are personal data under Brazil's LGPD. Handle those files responsibly.</li>
+      <li>This website uses no cookies, trackers or external services either.</li>
+    </ul>
+  </div>
+</div></section>
+<section id="limitacoes" class="white"><div class="wrap">
+  <h2>Limitations and disclaimer</h2>
+  <div class="notice" style="margin-bottom:20px" role="note"><b>These are automated hints, not proof.</b> Urna Guard can be wrong both ways. <b>Do not use the badges to harass, expose or mass-report anyone.</b> When in doubt, check the <a href="https://www.justicaeleitoral.jus.br/fato-ou-boato/" rel="noopener" hreflang="pt-BR">TSE "Fato ou Boato" page</a> (in Portuguese).</div>
+  <ul class="check warn">
+    <li>It doesn't understand context like a person does. Sarcasm and new rumors can slip through.</li>
+    <li>Account age and bio are only read when the profile is on screen.</li>
+    <li>Coordination detection only covers the posts you have seen.</li>
+    <li>It doesn't read text inside images without descriptions, or videos.</li>
+    <li>X changes its site code often, so the extension may need updates.</li>
+    <li>Real accounts can also have digits in the username or a default photo.</li>
+    <li>Narratives are tuned for Brazilian Portuguese content.</li>
+  </ul>
+</div></section>
+<section id="faq"><div class="wrap">
+  <h2>Frequently asked questions</h2>
+  <details><summary>Is it safe to install outside the store?</summary><p>The extension only asks to store data locally and only runs on x.com and twitter.com. The code is open and readable. Even so, only install extensions from sources you trust, and prefer the official stores once it's listed there.</p></details>
+  <details><summary>I see a warning about "developer mode" extensions. Is that normal?</summary><p>Yes. Chrome and Edge warn about manually installed extensions. You can dismiss it.</p></details>
+  <details><summary>Does it work on phones?</summary><p>No. Mobile browsers don't accept this kind of extension. Use it on a computer (Windows, Mac or Linux).</p></details>
+  <details><summary>Does it work on Brave, Opera or Vivaldi?</summary><p>Yes. Use the Chrome package and follow the Chrome steps, with <code>brave://extensions</code>, <code>opera://extensions</code> or <code>vivaldi://extensions</code> as the address.</p></details>
+  <details><summary>Why does it disappear in Firefox when I close the browser?</summary><p>Firefox only keeps extensions signed by Mozilla. Until the signed version is out, installing through about:debugging is temporary.</p></details>
+  <details><summary>How do I update?</summary><p>Download the new file, replace the folder's contents and click ↻ (reload) on the Urna Guard card on the extensions page. Store installs will update automatically.</p></details>
+  <details><summary>How do I uninstall?</summary><p>On the extensions page, click <b>Remove</b> on the Urna Guard card. Its local data is deleted along with it.</p></details>
+  <details><summary>Is a post with a badge necessarily false?</summary><p>No. The badge shows signals that often appear in disinformation. Always check official sources.</p></details>
+</div></section>
+<section class="white"><div class="wrap">
+  <h2>Official sources (in Portuguese)</h2>
+  <div class="grid2">
+    <a class="card" style="text-decoration:none" href="https://www.justicaeleitoral.jus.br/fato-ou-boato/" rel="noopener" hreflang="pt-BR"><h3>TSE: Fato ou Boato →</h3><p>Official fact-checks from Brazil's Electoral Justice.</p></a>
+    <a class="card" style="text-decoration:none" href="https://www.tse.jus.br/eleicoes/urna-eletronica/seguranca-da-urna" rel="noopener" hreflang="pt-BR"><h3>TSE: Voting machine security →</h3><p>How the voting machine is tested, audited and protected.</p></a>
+  </div>
+</div></section>
+</main>
+<footer><div class="wrap">
+  <p><b>Urna Guard 2.0.0</b>. An independent project, not affiliated with the TSE, Brazil's Electoral Justice or X. Automated hints, not proof.</p>
+  <p><a href="privacidade.html">Privacy policy</a> · This website uses no cookies, trackers or external resources.</p>
+</div></footer>
+
+<script>
+(function(){
+  'use strict';
+  // >>> Quando publicar, cole aqui as URLs das lojas: o botão "Instalar com 1 clique" passa a ser o principal.
+  var STORE = { chrome: '', edge: '', firefox: '' };
+  var V = '2.0.0';
+  var PKG = { chrome: '../downloads/urna-guard-chrome-' + V + '.zip', edge: '../downloads/urna-guard-chrome-' + V + '.zip', firefox: '../downloads/urna-guard-firefox-' + V + '.zip' };
+  var NAMES = { chrome: 'Google Chrome', edge: 'Microsoft Edge', firefox: 'Firefox' };
+  var B = {
+    chrome: { url: 'chrome://extensions',
+      s1: 'Click <a href="' + PKG.chrome + '" download>download the package</a>. Open your Downloads folder, right-click <code>urna-guard-chrome-' + V + '.zip</code> and choose <b>Extract All</b> (Windows) or double-click it (Mac). Keep the extracted folder somewhere permanent, such as Documents.',
+      s3t: 'Turn on "Developer mode"', s3: 'In the top-right corner of the page, turn on the <b>Developer mode</b> switch.', m3: '<span>Developer mode</span><span class="toggle"></span>',
+      s4t: 'Click "Load unpacked"', s4: 'Click <b>Load unpacked</b> and choose the extracted folder (the one that contains <code>manifest.json</code>).', m4: '<span class="fakebtn">Load unpacked</span>',
+      s5: 'Click the puzzle icon 🧩, then the pin 📌 next to <b>Urna Guard</b>. Open <b>x.com</b>: badges appear next to the author\'s name.' },
+    edge: { url: 'edge://extensions',
+      s1: 'Click <a href="' + PKG.edge + '" download>download the package</a>. Open Downloads, right-click <code>urna-guard-chrome-' + V + '.zip</code> and choose <b>Extract All</b>. The same package works for Chrome and Edge. Keep the folder somewhere permanent.',
+      s3t: 'Turn on "Developer mode"', s3: 'In the left sidebar of the page, turn on the <b>Developer mode</b> switch.', m3: '<span>Developer mode</span><span class="toggle"></span>',
+      s4t: 'Click "Load unpacked"', s4: 'Click <b>Load unpacked</b> and choose the extracted folder (the one that contains <code>manifest.json</code>).', m4: '<span class="fakebtn">Load unpacked</span>',
+      s5: 'Click the puzzle icon 🧩, then the eye 👁 to show <b>Urna Guard</b> in the toolbar. Open <b>x.com</b>: badges appear next to the author\'s name.' },
+    firefox: { url: 'about:debugging#/runtime/this-firefox',
+      s1: 'Click <a href="' + PKG.firefox + '" download>download the Firefox package</a>. No need to unzip.',
+      s3t: 'Click "Load Temporary Add-on…"', s3: 'On the page that opens, click <b>Load Temporary Add-on…</b>', m3: '<span class="fakebtn">Load Temporary Add-on…</span>',
+      s4t: 'Choose the downloaded file', s4: 'Select <code>urna-guard-firefox-' + V + '.zip</code>. <b>Note:</b> in Firefox this install is removed when the browser closes, until the signed version is on Mozilla\'s store.', m4: '<span>urna-guard-firefox-' + V + '.zip</span>',
+      s5: 'Open <b>x.com</b>: badges appear next to the author\'s name. Requires Firefox 142 or newer.' }
+  };
+  function detect() {
+    var ua = navigator.userAgent, mobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+    if (mobile) return { b: 'chrome', mobile: true };
+    if (/Edg\//.test(ua)) return { b: 'edge' };
+    if (/Firefox\//.test(ua)) return { b: 'firefox' };
+    if (/Chrome\//.test(ua) || /Chromium\//.test(ua)) return { b: 'chrome', brave: !!navigator.brave };
+    return { b: 'chrome', unsupported: true };
+  }
+  var $ = function (id) { return document.getElementById(id); };
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  function select(b, focus) {
+    var d = B[b];
+    tabs.forEach(function (t) { var on = t.dataset.b === b; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; if (on && focus) t.focus(); });
+    $('panel').setAttribute('aria-labelledby', 'tab-' + b);
+    $('url').textContent = d.url;
+    ['s1', 's3t', 's3', 'm3', 's4t', 's4', 's5'].forEach(function (k) { $(k).innerHTML = d[k]; });
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { select(t.dataset.b); });
+    t.addEventListener('keydown', function (e) {
+      var n = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+      if (n) { e.preventDefault(); select(tabs[(i + n + tabs.length) % tabs.length].dataset.b, true); }
+      if (e.key === 'Home') { e.preventDefault(); select(tabs[0].dataset.b, true); }
+      if (e.key === 'End') { e.preventDefault(); select(tabs[tabs.length - 1].dataset.b, true); }
+    });
+  });
+  var env = detect(), b = env.b, p = $('primary');
+  select(b);
+  var others = Object.keys(NAMES).filter(function (k) { return k !== b; })
+    .map(function (k) { return '<a href="' + PKG[k] + '" download>' + NAMES[k] + '</a>'; }).join(' · ');
+  if (env.mobile || env.unsupported) {
+    $('detected').innerHTML = env.mobile ? '📱 You are on a phone. The extension works on a <b>computer</b> with Chrome, Edge or Firefox.' : 'Your browser is not supported. Use <b>Chrome, Edge or Firefox</b> on a computer.';
+    p.textContent = 'See how to install'; p.href = '#instalar'; p.removeAttribute('download');
+    $('altLinks').innerHTML = 'Download packages: <a href="' + PKG.chrome + '" download>Chrome/Edge</a> · <a href="' + PKG.firefox + '" download>Firefox</a>';
+  } else if (STORE[b]) {
+    $('detected').innerHTML = 'Detected browser: <b>' + NAMES[b] + (env.brave ? ' (Brave)' : '') + '</b>';
+    p.textContent = '⚡ Install in 1 click'; p.href = STORE[b]; p.className = 'btn btn-primary'; p.setAttribute('rel', 'noopener'); p.removeAttribute('download');
+    $('ctaNote').innerHTML = 'Official store install, with automatic updates.';
+    $('altLinks').innerHTML = 'Prefer a manual install? <a href="#instalar">See the steps</a>';
+    $('storeNotice').hidden = true;
+  } else {
+    $('detected').innerHTML = 'Detected browser: <b>' + NAMES[b] + (env.brave ? ' (Brave)' : '') + '</b>';
+    p.innerHTML = '⬇ Download for ' + NAMES[b]; p.href = PKG[b]; p.setAttribute('download', '');
+    p.setAttribute('aria-describedby', 'ctaNote');
+    var one = document.createElement('a'); one.className = 'btn'; one.setAttribute('aria-disabled', 'true'); one.setAttribute('role', 'link');
+    one.textContent = '⚡ Install in 1 click: coming soon to the store'; one.style.marginTop = '12px'; one.style.display = 'flex';
+    one.addEventListener('click', function (e) { e.preventDefault(); });
+    p.insertAdjacentElement('afterend', one);
+    $('ctaNote').innerHTML = 'After downloading, follow the <a href="#instalar" style="color:#fff">install steps</a> (about 1 minute). Version ' + V + '.';
+    $('altLinks').innerHTML = 'Other browsers: ' + others;
+    p.addEventListener('click', function () { setTimeout(function () { $('instalar').scrollIntoView(); $('panel').focus({ preventScroll: true }); }, 400); });
+  }
+  var btn = $('copyBtn');
+  btn.addEventListener('click', function () {
+    var txt = $('url').textContent;
+    function done() { btn.textContent = 'Copied ✓'; btn.classList.add('ok'); $('copyStatus').textContent = 'Address copied: ' + txt; setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 2000); }
+    function fallback() { var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { btn.textContent = 'Select and copy'; } ta.remove(); }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(done, fallback); else fallback();
+  });
+})();
+</script>
+<script>
+(function(){try{var k='ug-lang',cur=document.documentElement.lang.slice(0,2);
+document.querySelectorAll('.lang a').forEach(function(a){a.addEventListener('click',function(){localStorage.setItem(k,a.getAttribute('hreflang').slice(0,2));});});
+var pref=localStorage.getItem(k);
+if(!pref&&cur==='pt'&&!/^pt/i.test(navigator.language||'pt')){location.replace('./');}
+else if(pref&&pref!==cur){location.replace(pref==='en'?'./':'../');}
+}catch(e){}})();
+</script>
+</body>
+</html>

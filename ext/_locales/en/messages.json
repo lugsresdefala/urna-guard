@@ -1,0 +1,6 @@
+{
+  "extName": { "message": "Urna Guard – voting-machine alerts on X", "description": "Extension name (max 45 chars)" },
+  "extShortName": { "message": "Urna Guard" },
+  "extDescription": { "message": "Flags (never hides) posts on X with signs of disinformation about Brazil's electronic voting machine and suspicious accounts. 100% local." },
+  "actionTitle": { "message": "Urna Guard" }
+}

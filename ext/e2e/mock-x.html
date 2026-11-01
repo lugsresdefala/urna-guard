@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt"><head><meta charset="utf-8"><title>Página inicial / X (mock)</title>
+<style>
+body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,sans-serif;background:#fff;color:#0f1419}
+main{display:flex;justify-content:center}
+[data-testid=primaryColumn]{width:600px;border-left:1px solid #eff3f4;border-right:1px solid #eff3f4;min-height:100vh}
+h2{margin:0;padding:14px 16px;font-size:20px;border-bottom:1px solid #eff3f4}
+article{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #eff3f4;cursor:pointer}
+[data-testid=Tweet-User-Avatar] img{width:40px;height:40px;border-radius:50%;background:#cfd9de}
+.body{flex:1;min-width:0}
+[data-testid=User-Name]{display:flex;gap:4px;align-items:center;flex-wrap:wrap;font-size:15px}
+[data-testid=User-Name] a{color:inherit;text-decoration:none}
+[data-testid=User-Name] .nm{font-weight:700}[data-testid=User-Name] .h{color:#536471}
+[data-testid=tweetText]{font-size:15px;line-height:20px;white-space:pre-wrap;margin-top:2px}
+div[role=link]{border:1px solid #cfd9de;border-radius:16px;padding:10px;margin-top:10px}
+[data-testid=tweetPhoto] img{width:100%;height:120px;border-radius:16px;background:#e1e8ed;margin-top:10px;display:block}
+[data-testid="card.wrapper"]{border:1px solid #cfd9de;border-radius:16px;margin-top:10px;padding:10px;color:#536471}
+svg[data-testid=icon-verified]{width:18px;height:18px;fill:#1d9bf0}
+[data-testid=HoverCard]{position:fixed;right:20px;top:80px;width:280px;padding:12px;border-radius:16px;box-shadow:0 0 15px rgba(0,0,0,.2);background:#fff}
+</style></head>
+<body>
+<main role="main"><div data-testid="primaryColumn"><h2 role="heading">Página inicial</h2>
+<section aria-labelledby="tl"><div aria-label="Linha do tempo: sua página inicial" id="timeline"></div></section></div></main>
+<script>
+const AV = h => `https://pbs.twimg.com/profile_images/1600000000/${h}_normal.jpg`;
+const DEF = 'https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png';
+let sid = 1000;
+function userName({ name, handle, verified }) {
+  return `<div data-testid="User-Name"><div><a href="/${handle}" role="link"><div><span class="nm"><span>${name}</span></span>${verified ? '<svg data-testid="icon-verified" aria-label="Conta verificada" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>' : ''}</div></a></div>
+  <div><a href="/${handle}" role="link" tabindex="-1"><span class="h">@${handle}</span></a><span class="h"> · </span><a href="/${handle}/status/${++sid}"><time datetime="2026-10-31T2${sid % 10}:00:00.000Z">2h</time></a></div></div>`;
+}
+function tweet(t) {
+  const el = document.createElement('div');
+  el.setAttribute('data-testid', 'cellInnerDiv');
+  el.innerHTML = `<article data-testid="tweet" role="article" tabindex="0" id="${t.id}">
+   <div data-testid="Tweet-User-Avatar"><div data-testid="UserAvatar-Container-${t.handle}"><img alt="" src="${t.defaultAvatar ? DEF : AV(t.handle)}"></div></div>
+   <div class="body">${userName(t)}
+    <div data-testid="tweetText" lang="pt" dir="auto"><span>${t.text}</span>${t.link ? ` <a href="https://t.co/xyz${sid}" dir="ltr">${t.link}</a>` : ''}</div>
+    ${t.photoAlt ? `<div data-testid="tweetPhoto"><img alt="${t.photoAlt}" src="https://pbs.twimg.com/media/abc${sid}.jpg"></div>` : ''}
+    ${t.card ? `<div data-testid="card.wrapper"><a href="https://t.co/card${sid}" aria-label="${t.card}"><div data-testid="card.layoutLarge.detail"><span>${t.card}</span></div></a></div>` : ''}
+    ${t.quote ? `<div role="link" tabindex="0">${userName(t.quote)}<div data-testid="tweetText" lang="pt" dir="auto"><span>${t.quote.text}</span></div></div>` : ''}
+   </div></article>`;
+  return el;
+}
+const TL = document.getElementById('timeline');
+const add = t => TL.appendChild(tweet(t));
+// Tweets iniciais
+[
+  { id: 't-red', name: 'Patriota', handle: 'patriota8473625', defaultAvatar: true,
+    text: 'URNAS PRÉ-PROGRAMADAS!!! O código-fonte secreto prova: fraude nas urnas #FraudeNasUrnas #VotoImpressoJa #SOSFFAA #Brasil #Acorda' },
+  { id: 't-check', name: 'Agência Lupa', handle: 'agencialupa', verified: true,
+    text: 'É falso que urnas vêm com votos ou que houve fraude nas urnas. O TSE esclarece e a checagem completa está no link.' },
+  { id: 't-neutral', name: 'Ana Costa', handle: 'anacosta', text: 'Votei cedo hoje, fila tranquila na minha seção. Bom domingo a todos!' },
+  { id: 't-obf', name: 'Carlos Mendes', handle: 'carlosmendes', text: 'A fr4ud3 n4s urn4s é real, a apuração é s.e.c.r.e.t.a' },
+  { id: 't-quote-debunk', name: 'Jornalista Exemplo', handle: 'jornal_exemplo', verified: true, text: 'Isso é mentira. O TSE já desmentiu.',
+    quote: { name: 'Zé 🇧🇷🇧🇷🔥', handle: 'ze19283746', text: 'Fraude nas urnas! Urnas hackeadas por hackers!' } },
+  { id: 't-quote-share', name: 'Pedro', handle: 'pedro_ok', text: 'Olha isso 👀 compartilhem',
+    quote: { name: 'Patriota BR', handle: 'brpatriota2', text: 'Urnas vieram com votos e o TSE manipula tudo' } },
+  { id: 't-alt', name: 'Lucia Prado', handle: 'luciaprado', text: 'Vejam o print que recebi', photoAlt: 'Print: urnas hackeadas no 2º turno' },
+  { id: 't-card', name: 'Roberto Lima', handle: 'robertolima', text: 'Leiam antes que apaguem', card: 'site-falso.com Smartmatic: urnas venezuelanas no Brasil' }
+].forEach(add);
+// Inserção dinâmica (exercita o MutationObserver): copypasta coordenada
+const COPY = 'Compartilhem antes que apaguem: as urnas vieram com votos, acordem brasileiros!';
+setTimeout(() => add({ id: 't-copy-1', name: 'Maria 🇧🇷🙏🔥', handle: 'kxw8812345', defaultAvatar: true, text: COPY, link: 'video-urnas.example/v/123' }), 600);
+setTimeout(() => add({ id: 't-copy-2', name: 'Patriota', handle: 'patriota991283', text: COPY.toUpperCase() + ' #urnas', link: 'video-urnas.example/v/123' }), 1100);
+setTimeout(() => add({ id: 't-copy-3', name: 'Brasileiro', handle: 'brasil77812345', defaultAvatar: true, text: 'compartilhem antes que apaguem!! as urnas vieram com votos, acordem brasileiros', link: 'video-urnas.example/v/123' }), 1600);
+setTimeout(() => add({ id: 't-neutral-2', name: 'Bruno Alves', handle: 'brunoalves', text: 'Alguém indica um bom livro de ficção científica?' }), 1800);
+// Hover card com bio (simula passar o mouse sobre @carlosmendes)
+window.showHoverCard = () => {
+  const hc = document.createElement('div');
+  hc.setAttribute('data-testid', 'HoverCard');
+  hc.innerHTML = `<div data-testid="UserCell"><a href="/carlosmendes"><span>Carlos Mendes</span></a><div><span>@carlosmendes</span></div>
+    <div data-testid="UserDescription" dir="auto">Conta reserva, fui suspenso. Sigo de volta 🇧🇷</div>
+    <a href="/carlosmendes/following"><span>4.210</span> Seguindo</a> <a href="/carlosmendes/verified_followers"><span>35</span> Seguidores</a></div>`;
+  document.body.appendChild(hc);
+};
+// clique no artigo "navega" (para checar que o selo não propaga clique)
+window.navigations = 0;
+document.addEventListener('click', e => { if (e.target.closest('article')) window.navigations++; });
+</script>
+</body></html>
